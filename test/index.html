@@ -9,25 +9,34 @@
 <body>
     <div name="container">
         <h2 id="title">Orbs Network Topology</h2>
-        <div id="orbs-nodes">
+        <div id="ton-urls">
         </div>
         <script type="text/javascript" src="../dist/index.min.js"></script>
         <script type="text/javascript">
             // onLoad
             document.addEventListener('DOMContentLoaded', function () {
                 // init orbs client
-                window.orbsClient.init().then(() => {
+                const host = "ton.gateway.orbs.network";
+                let config = {
+                    urlVersion: 1,
+                    network: "mainnet",
+                    protocol: "toncenter"
+                };
+
+                let client = new window.tonGateway(host, config);
+                client.init().then(() => {
                     // get container
-                    let orbsNodes = document.getElementById("orbs-nodes");
-                    // enum orbs-nodes
-                    for (let i = 0; i < 22; ++i) {
-                        let node = window.orbsClient.getNextNode();
+                    let tonUrls = document.getElementById("ton-urls");
+
+                    // enum ton-urls
+                    for (let i = 0; i < 2; ++i) {
+                        let url = client.getNextNodeUrl("getMasterChainInfo");
                         // append element
                         let code = document.createElement("code");
-                        code.innerHTML = JSON.stringify(node, null, 2);
+                        code.innerHTML = url;
                         let div = document.createElement("div");
                         div.appendChild(code)
-                        orbsNodes.appendChild(div);
+                        tonUrls.appendChild(div);
                     }
                 });
             }, false);
