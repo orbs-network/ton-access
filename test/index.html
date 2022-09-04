@@ -1,0 +1,37 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hello Typescript</title>
+</head>
+
+<body>
+    <div name="container">
+        <h2 id="title">Orbs Network Topology</h2>
+        <div id="orbs-nodes">
+        </div>
+        <script type="text/javascript" src="../dist/index.min.js"></script>
+        <script type="text/javascript">
+            // onLoad
+            document.addEventListener('DOMContentLoaded', function () {
+                // init orbs client
+                window.orbsClient.init().then(() => {
+                    // get container
+                    let orbsNodes = document.getElementById("orbs-nodes");
+                    // enum orbs-nodes
+                    for (let i = 0; i < 22; ++i) {
+                        let node = window.orbsClient.getNextNode();
+                        // append element
+                        let code = document.createElement("code");
+                        code.innerHTML = JSON.stringify(node, null, 2);
+                        let div = document.createElement("div");
+                        div.appendChild(code)
+                        orbsNodes.appendChild(div);
+                    }
+                });
+            }, false);
+        </script>
+</body>
+
+</html>
