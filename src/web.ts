@@ -1,9 +1,10 @@
-import { Nodes } from './nodes';
+import { Client } from './index';
+
 
 declare global {
   interface Window {
-    orbsClient: any;
+    tonGateway: any;
   }
 }
 
-window.orbsClient = new Nodes();
+window.tonGateway = Client;
