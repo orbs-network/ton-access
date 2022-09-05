@@ -1,5 +1,5 @@
 {
-  "name": "@orbs-network/orbs-client",
+  "name": "@orbs-network/ton-rpc-gw",
   "version": "0.0.1",
   "description": "Client side gateway to access Ton RPC protocols by IP randomly or round robin",
   "source": "lib/index.js",
@@ -22,14 +22,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/orbs-network/orbs-client.git"
+    "url": "git+https://github.com/orbs-network/ton-rpc-gw.git"
   },
   "author": "yuval@orbs.com",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/orbs-network/orbs-client/issues"
+    "url": "https://github.com/orbs-network/ton-rpc-gw/issues"
   },
-  "homepage": "https://github.com/orbs-network/orbs-client#readme",
+  "homepage": "https://github.com/orbs-network/ton-rpc-gw#readme",
   "dependencies": {
     "axios": "^0.27.2",
     "esbuild": "^0.15.5",
