@@ -53,7 +53,7 @@ export class Nodes {
     // return null;
 
     // go to fastly later
-    console.log(`backend url is not used in this version - hard coded instead (${url})`)
+    //console.log(`backend url is not used in this version - hard coded instead (${url})`)
 
     // hard coded seed
     return [

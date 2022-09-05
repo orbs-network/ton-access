@@ -16,8 +16,8 @@ test('Create', async () => {
   // sanity
   const url1 = tonGateway.getNextNodeUrl("getMasterChainInfo");
   const url2 = tonGateway.getNextNodeUrl("getMasterChainInfo");
-  const expect1 = `https://ton.gateway.orbs.network/${node1Name}/1/mainnet/toncenter/getMasterChainInfo`;
-  const expect2 = `https://ton.gateway.orbs.network/${node2Name}/1/mainnet/toncenter/getMasterChainInfo`;
+  const expect1 = `https://ton.gateway.orbs.network/${node1Name}/1/mainnet/toncenter/getMasterchainInfo`;
+  const expect2 = `https://ton.gateway.orbs.network/${node2Name}/1/mainnet/toncenter/getMasterchainInfo`;
   expect(url1).toBe(expect1);
   expect(url2).toBe(expect2)
   // back to first ur amongst two

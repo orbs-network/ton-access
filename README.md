@@ -19,8 +19,8 @@ async function start(){
     const client = new Client(config);
     await client.init();
     let url;
-    url = client.getNextNodeUrl("getMasterChainInfo");
-    url = client.getRandomNodeUrl("getMasterChainInfo");
+    url = client.getNextNodeUrl("getMasterchainInfo");
+    url = client.getRandNodeUrl("getMasterchainInfo");
     const response = await axios.get(url);    
     console.log(response);
 }
@@ -49,11 +49,11 @@ await client.init(seed);
 ```
 
 
-### getRandomNodeUrl
+### getRandNodeUrl
 Assembles a url from config parameters and any random backend node and suffix provided for endpoint
 ```JS
 // use random index to select the node.
-const node = client.getRandomNodeUrl("suffixEndPoint")
+const node = client.getRandNodeUrl("suffixEndPoint")
 ```
  - committeeOnly is optional - for future use
 
@@ -96,7 +96,7 @@ const node = client.getNextNodeUrl(committeeOnly)
 
                     // enum ton-urls
                     for (let i = 0; i < 10; ++i) {
-                        let url = client.getNextNodeUrl("getMasterChainInfo");
+                        let url = client.getNextNodeUrl("getMasterchainInfo");
                         // append element
                         let code = document.createElement("code");
                         code.innerHTML = url;
