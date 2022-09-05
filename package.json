@@ -3,6 +3,8 @@
   "version": "0.0.1",
   "description": "Client side gateway to access Ton RPC protocols by IP randomly or round robin",
   "source": "lib/index.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "files": [
     "lib/**/*"
   ],
