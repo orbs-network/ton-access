@@ -3,7 +3,8 @@ import { Nodes } from './nodes';
 export interface Config {
   urlVersion: number,
   network: "mainnet" | "testnet" | "sandbox",
-  protocol: "toncenter"
+  protocol: "toncenter",
+  host?: string
 }
 
 export class Client {
@@ -13,9 +14,9 @@ export class Client {
   host: string;
 
   //////////////////////////////////
-  constructor(host: string, config: Config) {
+  constructor(config: Config) {
     this.config = config;
-    this.host = host;
+    this.host = config.host || 'ton.gateway.orbs.network';
     this.nodes = new Nodes();
   }
   //////////////////////////////////

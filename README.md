@@ -8,69 +8,66 @@ npm install @orbs-network/ton-rpc-gw
 
 ## Get Started
 ```js
-const client = import "@orbs-network/ton-rpc-gw"
+import { Client, Config } from "@orbs-network/ton-rpc-gw"
 
-async function start(){
-    nodes =  new Client();
-    await  client.init();
-    // get a live ton node IP
-    const node = client.getRandomNode();
-    // get nodes status
-    const url = 'http://'+node.Ip+'/services/management-service/status';
-    const response = await axios.get(url);
-    console.log(`${node.Name} status`)
+async function start(){        
+    const config: Config = {
+        urlVersion: 1,
+        network: "mainnet",
+        protocol: "toncenter"
+    };  
+    const client = new Client(config);
+    await client.init();
+    let url;
+    url = client.getNextNodeUrl("getMasterChainInfo");
+    url = client.getRandomNodeUrl("getMasterChainInfo");
+    const response = await axios.get(url);    
     console.log(response);
 }
 ```
 
-## API
-
-### Node (type)
-```JSON
-{
-    "EthAddress": "0874bc1383958e2475df73dc68c4f09658e23777",
-    "OrbsAddress": "067a8afdc6d7bafa0ccaa5bb2da867f454a34dfa",
-    "Ip": "46.101.165.46",
-    "Port": 0,
-    "Name": "Wings Stiftung"
+### Config (type)
+```js
+export interface Config {  
+  urlVersion: number,
+  network: "mainnet" | "testnet" | "sandbox",
+  protocol: "toncenter",
+  host?: string,
 }
 ```
+- ```urlVersion``` ton-rpc protocol version - currently ```1```
+- ```network``` supported ton network
+- ```protocol``` ton protocol such as toncenter-http
+- ```host``` do not set, default is used ton.gateway.orbs.network
 
 ### init
 ```JS
 // optional array of seed HostNames of nodes
 // if node provided- a hard coded array is used
-const seed = [
-    '54.95.108.148',
-    '0xcore.orbs.network'
-];
-client.init(seed);
+
+await client.init(seed);
 ```
 
-> TODO: init with infura to get the committee from ethereum network
-### getRandomNode
+
+### getRandomNodeUrl
+Assembles a url from config parameters and any random backend node and suffix provided for endpoint
 ```JS
-// select weather to get any node or only a node from orbs 21 node committee
-const committeeOnly = true;
 // use random index to select the node.
-const node = client.getRandomNode(committeeOnly)
+const node = client.getRandomNodeUrl("suffixEndPoint")
 ```
+ - committeeOnly is optional - for future use
 
-### getNextNode
+### getNextNodeUrl
+Assembles a url from config parameters and any next backend node and suffix provided for endpoint
 ```JS
-// select weather to get any node or only a node from orbs 21 node committee
-const committeeOnly = false;
+
 // uses round robin to fetch next node
-const node = client.getNextNode(committeeOnly)
+const node = client.getNextNodeUrl(committeeOnly)
 ```
-
-> Please notice the health of the node is checked every 10 minutes. Its the user's responsibility to call another node upon a failure.
-
 ## webpage example
 
 ```html
 <html lang="en">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -78,31 +75,38 @@ const node = client.getNextNode(committeeOnly)
 </head>
 <body>
     <div name="container">
-        <h2 id="title">Orbs Network Topology</h2>
-        <div id="ton-nodes">
+        <h2 id="title">Ton Gateway URLs</h2>
+        <div id="ton-urls">
         </div>
         <script type="text/javascript" src="../dist/index.min.js"></script>
         <script type="text/javascript">
             // onLoad
             document.addEventListener('DOMContentLoaded', function () {
-                // init orbs client
-                window.orbsClient.init().then(() => {
+                // init orbs client                
+                let config = {
+                    urlVersion: 1,
+                    network: "mainnet",
+                    protocol: "toncenter"
+                };
+
+                let client = new window.tonGateway(config);
+                client.init().then(() => {
                     // get container
-                    let tonNodes = document.getElementById("ton-nodes");
-                    // enum ton-nodes
-                    for (let i = 0; i < 22; ++i) {
-                        let node = window.orbsClient.getNextNode();
+                    let tonUrls = document.getElementById("ton-urls");
+
+                    // enum ton-urls
+                    for (let i = 0; i < 10; ++i) {
+                        let url = client.getNextNodeUrl("getMasterChainInfo");
                         // append element
                         let code = document.createElement("code");
-                        code.innerHTML = JSON.stringify(node, null, 2);
+                        code.innerHTML = url;
                         let div = document.createElement("div");
                         div.appendChild(code)
-                        tonNodes.appendChild(div);
+                        tonUrls.appendChild(div);
                     }
                 });
             }, false);
         </script>
 </body>
-
 </html>
 ```

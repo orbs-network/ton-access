@@ -8,28 +8,27 @@
 
 <body>
     <div name="container">
-        <h2 id="title">Orbs Network Topology</h2>
+        <h2 id="title">Ton Gateway URLs</h2>
         <div id="ton-urls">
         </div>
         <script type="text/javascript" src="../dist/index.min.js"></script>
         <script type="text/javascript">
             // onLoad
             document.addEventListener('DOMContentLoaded', function () {
-                // init orbs client
-                const host = "ton.gateway.orbs.network";
+                // init orbs client                
                 let config = {
                     urlVersion: 1,
                     network: "mainnet",
                     protocol: "toncenter"
                 };
 
-                let client = new window.tonGateway(host, config);
+                let client = new window.tonGateway(config);
                 client.init().then(() => {
                     // get container
                     let tonUrls = document.getElementById("ton-urls");
 
                     // enum ton-urls
-                    for (let i = 0; i < 2; ++i) {
+                    for (let i = 0; i < 10; ++i) {
                         let url = client.getNextNodeUrl("getMasterChainInfo");
                         // append element
                         let code = document.createElement("code");

@@ -291,9 +291,9 @@
       exports.Client = void 0;
       var nodes_1 = require_nodes();
       var Client = function() {
-        function Client2(host, config) {
+        function Client2(config) {
           this.config = config;
-          this.host = host;
+          this.host = config.host || "ton.gateway.orbs.network";
           this.nodes = new nodes_1.Nodes();
         }
         Client2.prototype.init = function() {

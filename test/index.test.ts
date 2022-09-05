@@ -6,12 +6,11 @@ let config: Config = {
   protocol: "toncenter"
 };
 
-const host = "ton.gateway.orbs.network";
 const node1Name = '2000000000000000000000000000000000000002'
 const node2Name = '3000000000000000000000000000000000000003'
 
 test('Create', async () => {
-  const tonGateway = new Client(host, config);
+  const tonGateway = new Client(config);
   expect(tonGateway).toBeDefined();
   await tonGateway.init();
   // sanity
