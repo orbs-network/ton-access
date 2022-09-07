@@ -28,8 +28,9 @@
                     let tonUrls = document.getElementById("ton-urls");
 
                     // enum ton-urls
+                    let url
                     for (let i = 0; i < 10; ++i) {
-                        let url = client.getNextNodeUrl("getMasterChainInfo");
+                        url = client.getNextNodeUrl("getMasterchainInfo");
                         // append element
                         let code = document.createElement("code");
                         code.innerHTML = url;
@@ -37,6 +38,9 @@
                         div.appendChild(code)
                         tonUrls.appendChild(div);
                     }
+                    fetch(url).then((res) => {
+                        console.log(res);
+                    });
                 });
             }, false);
         </script>

@@ -14,21 +14,25 @@ test('Create', async () => {
   expect(tonGateway).toBeDefined();
   await tonGateway.init();
   // sanity
-  const url1 = tonGateway.getNextNodeUrl("getMasterChainInfo");
-  const url2 = tonGateway.getNextNodeUrl("getMasterChainInfo");
+  const url1 = tonGateway.getNextNodeUrl("getMasterchainInfo");
+  const url2 = tonGateway.getNextNodeUrl("getMasterchainInfo");
   const expect1 = `https://ton.gateway.orbs.network/${node1Name}/1/mainnet/toncenter/getMasterchainInfo`;
   const expect2 = `https://ton.gateway.orbs.network/${node2Name}/1/mainnet/toncenter/getMasterchainInfo`;
   expect(url1).toBe(expect1);
   expect(url2).toBe(expect2)
   // back to first ur amongst two
-  const url3 = tonGateway.getNextNodeUrl("getMasterChainInfo");
+  const endpoint = "getMasterchainInfo";
+  const url3 = tonGateway.getNextNodeUrl(endpoint);
   expect(url3).toBe(expect1);
   // check out of 20 randoms, there a change
   const s = new Set<string>;
   for (let i = 0; i < 20; ++i) {
-    s.add(tonGateway.getRandNodeUrl("getMasterChainInfo"));
+    s.add(tonGateway.getRandNodeUrl(endpoint));
   }
-  expect(s.size).toBe(2);
+  expect(s.size).toBe(tonGateway.nodes.topology.length);
+
+  // test post 
+  //s.add(tonGateway.getRandNodeUrl(endpoint));
 });
 
 // test('Next', async () => {

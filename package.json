@@ -33,7 +33,9 @@
   },
   "homepage": "https://github.com/orbs-network/ton-rpc-gw#readme",
   "dependencies": {
+    "@types/isomorphic-fetch": "^0.0.36",
     "esbuild": "^0.15.5",
+    "isomorphic-fetch": "^3.0.0",
     "rimraf": "^3.0.2"
   },
   "devDependencies": {
