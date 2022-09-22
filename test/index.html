@@ -15,11 +15,16 @@
         <script type="text/javascript">
             // onLoad
             document.addEventListener('DOMContentLoaded', function () {
+                // default endpoint
+                window.getHttpEndpoint().then((url) => {
+                    console.log('default endpoint is: ', url);
+                });
+
                 // init ton gateway                
                 let config = {
                     urlVersion: 1,
                     network: "mainnet",
-                    protocol: "toncenter"
+                    protocol: "toncenter-api-v2"
                 };
 
                 let gateway = new window.tonGateway(config);

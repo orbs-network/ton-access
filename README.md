@@ -36,7 +36,7 @@ interface Config {
 ```
 - ```version``` ton-rpc protocol version - currently ```1```
 - ```network``` supported ton network
-- ```protocol``` ton protocol such as toncenter-http
+- ```protocol``` ton protocol such as toncenter-api-v2
 - ```host``` do not set, default is used ton.gateway.orbs.network
 
 
@@ -88,7 +88,6 @@ const node = gateway.getRandNodeUrl("getMasterchainInfo")
 
 ```html
 <html lang="en">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -104,11 +103,16 @@ const node = gateway.getRandNodeUrl("getMasterchainInfo")
         <script type="text/javascript">
             // onLoad
             document.addEventListener('DOMContentLoaded', function () {
+                // default endpoint
+                window.getHttpEndpoint().then((url) => {
+                    console.log('default endpoint is: ', url);
+                });
+
                 // init ton gateway                
                 let config = {
                     urlVersion: 1,
                     network: "mainnet",
-                    protocol: "toncenter"
+                    protocol: "toncenter-api-v2"
                 };
 
                 let gateway = new window.tonGateway(config);
