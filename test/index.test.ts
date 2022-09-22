@@ -1,51 +1,71 @@
-import { Client, Config } from '../src/index';
+import { Gateway, Config, getHttpEndpoint } from '../src/index';
 
 let config: Config = {
-  urlVersion: 1,
-  network: "mainnet",
-  protocol: "toncenter"
+    version: 1,
+    network: "mainnet",
+    protocol: "toncenter-api-v2"
 };
 
-const node1Name = '2000000000000000000000000000000000000002'
-const node2Name = '3000000000000000000000000000000000000003'
+test('api', async () => {
+    // no config
+    let url1 = await getHttpEndpoint();
+    let url2 = await getHttpEndpoint(config);
+    config.network = "testnet";
+    let url3 = await getHttpEndpoint(config);
 
-test('Create', async () => {
-  const tonGateway = new Client(config);
-  expect(tonGateway).toBeDefined();
-  await tonGateway.init();
-  // sanity
-  const url1 = tonGateway.getNextNodeUrl("getMasterchainInfo");
-  const url2 = tonGateway.getNextNodeUrl("getMasterchainInfo");
-  const expect1 = `https://ton.gateway.orbs.network/${node1Name}/1/mainnet/toncenter/getMasterchainInfo`;
-  const expect2 = `https://ton.gateway.orbs.network/${node2Name}/1/mainnet/toncenter/getMasterchainInfo`;
-  expect(url1).toBe(expect1);
-  expect(url2).toBe(expect2)
-  // back to first ur amongst two
-  const endpoint = "getMasterchainInfo";
-  const url3 = tonGateway.getNextNodeUrl(endpoint);
-  expect(url3).toBe(expect1);
-  // check out of 20 randoms, there a change
-  const s = new Set<string>;
-  for (let i = 0; i < 20; ++i) {
-    s.add(tonGateway.getRandNodeUrl(endpoint));
-  }
-  expect(s.size).toBe(tonGateway.nodes.topology.length);
+    // suffixes only to ignore node address
+    url1 = url1.substring(74)
+    url2 = url2.substring(74)
+    url3 = url3.substring(74)
 
-  // test post 
-  //s.add(tonGateway.getRandNodeUrl(endpoint));
+    // def config should produce the same as initialized config
+    expect(url1).toEqual(url2);
+    // tesnet should not match mainnet
+    expect(url2 === url3).toBe(false);
 });
 
-// test('Next', async () => {
-//   const tonGateway = create();
-//   expect(tonGateway).toBeDefined();
-//   await tonGateway.init();
-//   let next;
-//   next = tonGateway.getNextNode();
-//   expect(tonGateway.nodeIndex).toBe(0);
-//   next = tonGateway.getNextNode();
-//   expect(tonGateway.nodeIndex).toBe(1);
-//   next = tonGateway.getNextNode();
-//   expect(tonGateway.nodeIndex).toBe(2);
-// });
+const node2Name = '19e116699fd6c7ad754a912af633aafec27cc456'
+const node3Name = '1cde611619e2a466c87a23b64870397436082895'
 
-//https://ton.gateway.orbs.network/2000000000000000000000000000000000000002/1/mainnet/toncenter/getMasterchainInfo
+test('gateway', async () => {
+    const gateway = new Gateway();
+    expect(gateway).toBeDefined();
+    await gateway.init();
+    // sanity
+    const endpoint = "getMasterchainInfo";
+    const url2 = gateway.getNextNodeUrl(endpoint);
+    const url3 = gateway.getNextNodeUrl(endpoint);
+    expect(url2 === url3).toBe(false);
+    // the backend is fetched backwards 3 first than 2
+    const expect2 = `https://ton.gateway.orbs.network/${node2Name}/1/mainnet/toncenter-api-v2/${endpoint}`;
+    const expect3 = `https://ton.gateway.orbs.network/${node3Name}/1/mainnet/toncenter-api-v2/${endpoint}`;
+    expect(url2).toBe(expect2);
+    expect(url3).toBe(expect3)
+    // back to first ur amongst two
+    const url4 = gateway.getNextNodeUrl(endpoint);
+    expect(url4).toBe(expect2);
+    // check out of 20 randoms, there a change
+    const s = new Set<string>;
+    for (let i = 0; i < 20; ++i) {
+        s.add(gateway.getRandNodeUrl(endpoint));
+    }
+    expect(s.size).toBe(gateway.nodes.topology.length);
+});
+
+test('jsonRPC', async () => {
+    let url = await getHttpEndpoint();
+    url += '/jsonRPC'
+    const body = { "id": "1", "jsonrpc": "2.0", "method": "runGetMethod", "params": { "address": "0:f4f590eb7d85d4f8778afa1771c0f43772304e22c7ec194072ca9fd220368f5c", "method": "get_jetton_data", "stack": [] } };
+    const rawResponse = await fetch(url, {
+        method: 'POST',
+        //mode: 'cors',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+    });
+    const content = await rawResponse.json();
+
+    expect(content.ok).toBe(true);
+});

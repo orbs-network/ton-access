@@ -1,19 +1,8 @@
 "use strict";
 (function() {
   var __getOwnPropNames = Object.getOwnPropertyNames;
-  var __require = /* @__PURE__ */ function(x) {
-    return typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
-      get: function(a, b) {
-        return (typeof require !== "undefined" ? require : a)[b];
-      }
-    }) : x;
-  }(function(x) {
-    if (typeof require !== "undefined")
-      return require.apply(this, arguments);
-    throw new Error('Dynamic require of "' + x + '" is not supported');
-  });
   var __commonJS = function(cb, mod) {
-    return function __require2() {
+    return function __require() {
       return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
     };
   };
@@ -691,12 +680,7 @@
             committeeOnly = true;
           }
           var index = Math.floor(Math.random() * this.topology.length);
-          while (true) {
-            index++;
-            if (index >= this.topology.length)
-              index = 0;
-            return this.topology[index];
-          }
+          return this.topology[index];
         };
         return Nodes2;
       }();
@@ -706,7 +690,7 @@
 
   // lib/index.js
   var require_lib = __commonJS({
-    "lib/index.js": function(exports, module) {
+    "lib/index.js": function(exports) {
       "use strict";
       var __awaiter = exports && exports.__awaiter || function(thisArg, _arguments, P, generator) {
         function adopt(value) {
@@ -812,20 +796,24 @@
         }
       };
       Object.defineProperty(exports, "__esModule", { value: true });
-      exports.Client = void 0;
+      exports.getWsEndpoint = exports.getHttpEndpoint = exports.Gateway = void 0;
       var nodes_1 = require_nodes();
-      var Client = function() {
-        function Client2(config) {
-          this.config = config;
-          this.host = config.host || "ton.gateway.orbs.network";
+      var Gateway = function() {
+        function Gateway2(config) {
+          this.config = {
+            version: (config === null || config === void 0 ? void 0 : config.version) || 1,
+            network: (config === null || config === void 0 ? void 0 : config.network) || "mainnet",
+            protocol: (config === null || config === void 0 ? void 0 : config.protocol) || "toncenter-api-v2",
+            host: (config === null || config === void 0 ? void 0 : config.host) || "ton.gateway.orbs.network"
+          };
           this.nodes = new nodes_1.Nodes();
         }
-        Client2.prototype.init = function() {
+        Gateway2.prototype.init = function() {
           return __awaiter(this, void 0, void 0, function() {
             return __generator(this, function(_a) {
               switch (_a.label) {
                 case 0:
-                  return [4, this.nodes.init("https://".concat(this.host, "/nodes"))];
+                  return [4, this.nodes.init("https://".concat(this.config.host, "/nodes"))];
                 case 1:
                   _a.sent();
                   return [2];
@@ -833,13 +821,17 @@
             });
           });
         };
-        Client2.prototype.buildUrl = function(nodeName, suffixPath) {
-          var urlVersion = this.config.urlVersion.toString();
+        Gateway2.prototype.buildUrl = function(nodeName, suffixPath) {
+          var _a;
+          var urlVersion = ((_a = this.config.version) === null || _a === void 0 ? void 0 : _a.toString()) || 1;
           var network = this.config.network;
           var protocol = this.config.protocol;
-          return "https://".concat(this.host, "/").concat(nodeName, "/").concat(urlVersion, "/").concat(network, "/").concat(protocol, "/").concat(suffixPath);
+          var url = "https://".concat(this.config.host, "/").concat(nodeName, "/").concat(urlVersion, "/").concat(network, "/").concat(protocol);
+          if (suffixPath)
+            url += "/".concat(suffixPath);
+          return url;
         };
-        Client2.prototype.getNextNodeUrl = function(suffixPath, committeeOnly) {
+        Gateway2.prototype.getNextNodeUrl = function(suffixPath, committeeOnly) {
           if (committeeOnly === void 0) {
             committeeOnly = false;
           }
@@ -847,7 +839,7 @@
             throw new Error("Call init() first");
           return this.buildUrl(this.nodes.getNextNode().Name, suffixPath);
         };
-        Client2.prototype.getRandNodeUrl = function(suffixPath, committeeOnly) {
+        Gateway2.prototype.getRandNodeUrl = function(suffixPath, committeeOnly) {
           if (committeeOnly === void 0) {
             committeeOnly = false;
           }
@@ -855,40 +847,33 @@
             throw new Error("Call init() first");
           return this.buildUrl(this.nodes.getRandomNode().Name, suffixPath);
         };
-        return Client2;
+        return Gateway2;
       }();
-      exports.Client = Client;
-      function sanity() {
+      exports.Gateway = Gateway;
+      function getHttpEndpoint(config) {
         return __awaiter(this, void 0, void 0, function() {
-          var config, c, url, s, i;
+          var gateway;
           return __generator(this, function(_a) {
             switch (_a.label) {
               case 0:
-                config = {
-                  urlVersion: 1,
-                  network: "mainnet",
-                  protocol: "toncenter"
-                };
-                c = new Client(config);
-                return [4, c.init()];
+                gateway = new Gateway(config);
+                return [4, gateway.init()];
               case 1:
                 _a.sent();
-                url = c.getNextNodeUrl("getMasterChainInfo");
-                url = c.getNextNodeUrl("getMasterChainInfo");
-                url = c.getNextNodeUrl("getMasterChainInfo");
-                s = /* @__PURE__ */ new Set();
-                for (i = 0; i < 20; ++i) {
-                  s.add(c.getRandNodeUrl("getMasterChainInfo"));
-                }
-                console.log(s.size);
-                return [2];
+                return [2, gateway.getRandNodeUrl()];
             }
           });
         });
       }
-      if (__require.main === module) {
-        sanity();
+      exports.getHttpEndpoint = getHttpEndpoint;
+      function getWsEndpoint(config) {
+        return __awaiter(this, void 0, void 0, function() {
+          return __generator(this, function(_a) {
+            return [2, void 0];
+          });
+        });
       }
+      exports.getWsEndpoint = getWsEndpoint;
     }
   });
 
@@ -897,7 +882,8 @@
     "lib/web.js": function(exports) {
       Object.defineProperty(exports, "__esModule", { value: true });
       var index_1 = require_lib();
-      window.tonGateway = index_1.Client;
+      window.tonGateway = index_1.Gateway;
+      window.getHttpEndpoint = index_1.getHttpEndpoint;
     }
   });
   require_web();

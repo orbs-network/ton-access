@@ -104,3 +104,6 @@ typings/
 .tern-port
 
 /lib
+
+# mac
+.DS_Store

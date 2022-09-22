@@ -15,22 +15,22 @@
         <script type="text/javascript">
             // onLoad
             document.addEventListener('DOMContentLoaded', function () {
-                // init orbs client                
+                // init ton gateway                
                 let config = {
                     urlVersion: 1,
                     network: "mainnet",
                     protocol: "toncenter"
                 };
 
-                let client = new window.tonGateway(config);
-                client.init().then(() => {
+                let gateway = new window.tonGateway(config);
+                gateway.init().then(() => {
                     // get container
                     let tonUrls = document.getElementById("ton-urls");
 
                     // enum ton-urls
                     let url
                     for (let i = 0; i < 10; ++i) {
-                        url = client.getNextNodeUrl("getMasterchainInfo");
+                        url = gateway.getNextNodeUrl("getMasterchainInfo");
                         // append element
                         let code = document.createElement("code");
                         code.innerHTML = url;

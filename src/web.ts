@@ -1,10 +1,12 @@
-import { Client } from './index';
+import { Gateway, getHttpEndpoint, Config } from './index';
 
 
 declare global {
   interface Window {
-    tonGateway: any;
+    tonGateway: object;
+    getHttpEndpoint: (config: Config) => Promise<string>;
   }
 }
 
-window.tonGateway = Client;
+window.tonGateway = Gateway;
+window.getHttpEndpoint = getHttpEndpoint;
