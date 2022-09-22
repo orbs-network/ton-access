@@ -1,4 +1,4 @@
-import 'isomorphic-fetch';
+import "isomorphic-fetch";
 
 interface Node {
   Name: string;
@@ -28,7 +28,6 @@ export class Nodes {
       const response = await fetch(nodesUrl);
       const data = await response.json();
       this.topology = data as Node[];
-
     } catch (e) {
       console.error(`exception in fetch(${nodesUrl}):`, e);
     }

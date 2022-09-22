@@ -1,4 +1,4 @@
-import { Nodes } from './nodes';
+import { Nodes } from "./nodes";
 
 // export interface Config {
 //   urlVersion: number,
@@ -8,11 +8,11 @@ import { Nodes } from './nodes';
 // }
 
 export interface Config {
-  version?: number // default: 1
-  network?: "mainnet" | "testnet" | "sandbox" // default: mainnet
-  protocol?: "toncenter-api-v2" | "ton-api-v4" | "adnl-proxy" // default: toncenter-api-v2
-  host?: string // default: "ton.gateway.orbs.network"
-};
+  version?: number; // default: 1
+  network?: "mainnet" | "testnet" | "sandbox"; // default: mainnet
+  protocol?: "toncenter-api-v2" | "ton-api-v4" | "adnl-proxy"; // default: toncenter-api-v2
+  host?: string; // default: "ton.gateway.orbs.network"
+}
 
 export class Gateway {
   //////////////////////////////////
@@ -21,12 +21,11 @@ export class Gateway {
 
   //////////////////////////////////
   constructor(config?: Config) {
-
     this.config = {
       version: config?.version || 1,
-      network: config?.network || 'mainnet',
-      protocol: config?.protocol || 'toncenter-api-v2',
-      host: config?.host || 'ton.gateway.orbs.network'
+      network: config?.network || "mainnet",
+      protocol: config?.protocol || "toncenter-api-v2",
+      host: config?.host || "ton.gateway.orbs.network",
     };
 
     this.nodes = new Nodes();
@@ -35,7 +34,7 @@ export class Gateway {
   async init() {
     await this.nodes.init(`https://${this.config.host}/nodes`); // pass host when backend endpoint is ready
   }
-  // committee only will be used in L3 only  
+  // committee only will be used in L3 only
   // e.g https://ton.gateway.orbs.network/{node.name}/1/mainnet/toncenter/getMasterchainInfo
   buildUrl(nodeName: string, suffixPath?: string) {
     const urlVersion = this.config.version?.toString() || 1;
@@ -43,12 +42,10 @@ export class Gateway {
     const protocol = this.config.protocol;
     let url = `https://${this.config.host}/${nodeName}/${urlVersion}/${network}/${protocol}`;
     // suffix
-    if (suffixPath)
-      url += `/${suffixPath}`;
+    if (suffixPath) url += `/${suffixPath}`;
     return url;
-
   }
-  //////////////////////////////////  
+  //////////////////////////////////
   getNextNodeUrl(suffixPath?: string, committeeOnly: boolean = false) {
     if (!this.nodes.topology.length) throw new Error("Call init() first");
 
@@ -73,7 +70,6 @@ export async function getWsEndpoint(config?: Config) {
   return undefined;
 }
 
-
 // debug
 // async function sanity() {
 //   // const config: Config = {
@@ -95,7 +91,6 @@ export async function getWsEndpoint(config?: Config) {
 //   url = gw.getNextNodeUrl(endpoint);
 //   url = gw.getNextNodeUrl(endpoint);
 //   url = gw.getNextNodeUrl(endpoint);
-
 
 //   const s = new Set<string>;
 //   for (let i = 0; i < 20; ++i) {

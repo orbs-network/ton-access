@@ -1,5 +1,4 @@
-import { Gateway, getHttpEndpoint, Config } from './index';
-
+import { Gateway, getHttpEndpoint, Config } from "./index";
 
 declare global {
   interface Window {
