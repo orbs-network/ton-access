@@ -1,7 +1,7 @@
 {
   "name": "@orbs-network/ton-gateway",
   "version": "1.1.1",
-  "description": "Client side gateway to access Ton RPC protocols by IP randomly or round robin",
+  "description": "Unthrottled anonymous RPC access to TON blockchain via a robust decentralized network",
   "source": "lib/index.js",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
