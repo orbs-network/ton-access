@@ -3,13 +3,13 @@ import { Gateway, getHttpEndpoint, Config } from "./index";
 declare global {
 
   interface Window {
-    tonGateway: object;
+    TonGateway: object;
   }
 
 
 }
 
-window.tonGateway = {
+window.TonGateway = {
   create: (config: Config) => { return new Gateway(config) },
   getHttpEndpoint
 }

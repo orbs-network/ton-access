@@ -882,7 +882,7 @@
     "lib/web.js": function(exports) {
       Object.defineProperty(exports, "__esModule", { value: true });
       var index_1 = require_lib();
-      window.tonGateway = {
+      window.TonGateway = {
         create: function(config) {
           return new index_1.Gateway(config);
         },
