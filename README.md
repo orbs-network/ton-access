@@ -26,7 +26,7 @@ import { TonClient, Address } from "ton";
 import { getHttpEndpoint } from "@orbs-network/ton-gateway";
 
 const endpoint = await getHttpEndpoint(); // get the decentralized RPC endpoint
-const client = new TonClient({ endpoint }); // initialize ton library
+const client = new TonClient({ endpoint: endpoint }); // initialize ton library
 
 // make some query to mainnet
 const address = Address.parseFriendly("EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N").address;
