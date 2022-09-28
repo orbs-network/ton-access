@@ -70,17 +70,14 @@ test('jsonRPC', async () => {
     expect(content.ok).toBe(true);
 });
 
-//import { TonClient, Address } from "ton";
-// async function main() {
+import { TonClient, Address } from "ton";
+test('ton', async () => {
+    const endpoint = await getHttpEndpoint();
+    const client = new TonClient({ endpoint });
 
-//     const endpoint = await getHttpEndpoint();
-//     const client = new TonClient({ endpoint });
+    // make a query to mainnet
+    const address = Address.parseFriendly("EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N").address;
+    const balance = await client.getBalance(address);
 
-//     // make a query to mainnet
-//     const address = Address.parseFriendly("EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N").address;
-//     const balance = await client.getBalance(address);
-
-//     console.log(balance);
-// }
-
-// main();
+    expect(parseInt(balance)).toBeGreaterThan(0);
+});

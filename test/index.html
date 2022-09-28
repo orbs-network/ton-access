@@ -27,7 +27,7 @@
                     protocol: "toncenter-api-v2"
                 };
 
-                let gateway = new window.TonGateway.create(config);
+                let gateway = window.TonGateway.create(config);
                 gateway.init().then(() => {
                     // get container
                     let tonUrls = document.getElementById("ton-urls");
