@@ -71,7 +71,7 @@ test('jsonRPC', async () => {
 });
 
 import { TonClient, Address } from "ton";
-test('ton', async () => {
+test('ton-npm', async () => {
     const endpoint = await getHttpEndpoint();
     const client = new TonClient({ endpoint });
 
@@ -81,3 +81,13 @@ test('ton', async () => {
 
     expect(parseInt(balance)).toBeGreaterThan(0);
 });
+
+// import TonWeb from "tonweb";
+// test('tonweb', async () => {
+//     const endpoint = await getHttpEndpoint(); // get the decentralized RPC endpoint
+//     const tonweb = new TonWeb(new TonWeb.HttpProvider(endpoint)); // initialize tonweb library
+
+//     //     // make some query to mainnet
+//     //     //const balance = await tonweb.getBalance("EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N");
+//     //     //expect(parseInt(balance)).toBeGreaterThan(0);
+// });
