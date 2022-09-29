@@ -1,11 +1,15 @@
 import { Gateway, getHttpEndpoint, Config } from "./index";
 
 declare global {
+
   interface Window {
-    tonGateway: object;
-    getHttpEndpoint: (config: Config) => Promise<string>;
+    TonGateway: object;
   }
+
+
 }
 
-window.tonGateway = Gateway;
-window.getHttpEndpoint = getHttpEndpoint;
+window.TonGateway = {
+  create: (config: Config) => { return new Gateway(config) },
+  getHttpEndpoint
+}

@@ -804,7 +804,8 @@
             version: (config === null || config === void 0 ? void 0 : config.version) || 1,
             network: (config === null || config === void 0 ? void 0 : config.network) || "mainnet",
             protocol: (config === null || config === void 0 ? void 0 : config.protocol) || "toncenter-api-v2",
-            host: (config === null || config === void 0 ? void 0 : config.host) || "ton.gateway.orbs.network"
+            host: (config === null || config === void 0 ? void 0 : config.host) || "ton.gateway.orbs.network",
+            suffix: (config === null || config === void 0 ? void 0 : config.suffix) || "jsonRPC"
           };
           this.nodes = new nodes_1.Nodes();
         }
@@ -826,10 +827,9 @@
           var urlVersion = ((_a = this.config.version) === null || _a === void 0 ? void 0 : _a.toString()) || 1;
           var network = this.config.network;
           var protocol = this.config.protocol;
-          var url = "https://".concat(this.config.host, "/").concat(nodeName, "/").concat(urlVersion, "/").concat(network, "/").concat(protocol);
-          if (suffixPath)
-            url += "/".concat(suffixPath);
-          return url;
+          if (!suffixPath)
+            suffixPath = this.config.suffix;
+          return "https://".concat(this.config.host, "/").concat(nodeName, "/").concat(urlVersion, "/").concat(network, "/").concat(protocol, "/").concat(suffixPath);
         };
         Gateway2.prototype.getNextNodeUrl = function(suffixPath, committeeOnly) {
           if (committeeOnly === void 0) {
@@ -882,8 +882,12 @@
     "lib/web.js": function(exports) {
       Object.defineProperty(exports, "__esModule", { value: true });
       var index_1 = require_lib();
-      window.tonGateway = index_1.Gateway;
-      window.getHttpEndpoint = index_1.getHttpEndpoint;
+      window.TonGateway = {
+        create: function(config) {
+          return new index_1.Gateway(config);
+        },
+        getHttpEndpoint: index_1.getHttpEndpoint
+      };
     }
   });
   require_web();

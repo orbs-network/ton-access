@@ -12,6 +12,7 @@ export interface Config {
   network?: "mainnet" | "testnet" | "sandbox"; // default: mainnet
   protocol?: "toncenter-api-v2" | "ton-api-v4" | "adnl-proxy"; // default: toncenter-api-v2
   host?: string; // default: "ton.gateway.orbs.network"
+  suffix?: string; // default: "jsonRPC"
 }
 
 export class Gateway {
@@ -26,6 +27,7 @@ export class Gateway {
       network: config?.network || "mainnet",
       protocol: config?.protocol || "toncenter-api-v2",
       host: config?.host || "ton.gateway.orbs.network",
+      suffix: config?.suffix || "jsonRPC"
     };
 
     this.nodes = new Nodes();
@@ -40,10 +42,10 @@ export class Gateway {
     const urlVersion = this.config.version?.toString() || 1;
     const network = this.config.network;
     const protocol = this.config.protocol;
-    let url = `https://${this.config.host}/${nodeName}/${urlVersion}/${network}/${protocol}`;
-    // suffix
-    if (suffixPath) url += `/${suffixPath}`;
-    return url;
+    if (!suffixPath)
+      suffixPath = this.config.suffix;
+
+    return `https://${this.config.host}/${nodeName}/${urlVersion}/${network}/${protocol}/${suffixPath}`;
   }
   //////////////////////////////////
   getNextNodeUrl(suffixPath?: string, committeeOnly: boolean = false) {
@@ -70,7 +72,9 @@ export async function getWsEndpoint(config?: Config) {
   return undefined;
 }
 
+
 // debug
+// import { TonClient, Address } from "ton";
 // async function sanity() {
 //   // const config: Config = {
 //   //   urlVersion: 1,
@@ -81,6 +85,15 @@ export async function getWsEndpoint(config?: Config) {
 
 //   const httpEndpoint = await getHttpEndpoint();
 //   console.log(httpEndpoint);
+
+//   //import { getHttpEndpoint } from "@orbs-network/ton-gateway";
+
+//   const client = new TonClient({ endpoint: httpEndpoint + '/jsonRPC' }); // initialize ton library
+
+//   // make some query to mainnet        
+//   const address = Address.parseFriendly("EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N").address;
+//   const balance = await client.getBalance(address);
+//   console.log(balance);
 
 //   // sanity
 //   const endpoint = "getMasterchainInfo";

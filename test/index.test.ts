@@ -27,7 +27,7 @@ test('api', async () => {
 const node2Name = '19e116699fd6c7ad754a912af633aafec27cc456'
 const node3Name = '1cde611619e2a466c87a23b64870397436082895'
 
-test('gateway', async () => {
+test('NextAndRand', async () => {
     const gateway = new Gateway();
     expect(gateway).toBeDefined();
     await gateway.init();
@@ -54,7 +54,7 @@ test('gateway', async () => {
 
 test('jsonRPC', async () => {
     let url = await getHttpEndpoint();
-    url += '/jsonRPC'
+    // url += '/jsonRPC' - default
     const body = { "id": "1", "jsonrpc": "2.0", "method": "runGetMethod", "params": { "address": "0:f4f590eb7d85d4f8778afa1771c0f43772304e22c7ec194072ca9fd220368f5c", "method": "get_jetton_data", "stack": [] } };
     const rawResponse = await fetch(url, {
         method: 'POST',
@@ -69,3 +69,25 @@ test('jsonRPC', async () => {
 
     expect(content.ok).toBe(true);
 });
+
+import { TonClient, Address } from "ton";
+test('ton-npm', async () => {
+    const endpoint = await getHttpEndpoint();
+    const client = new TonClient({ endpoint });
+
+    // make a query to mainnet
+    const address = Address.parseFriendly("EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N").address;
+    const balance = await client.getBalance(address);
+
+    expect(parseInt(balance)).toBeGreaterThan(0);
+});
+
+// import TonWeb from "tonweb";
+// test('tonweb', async () => {
+//     const endpoint = await getHttpEndpoint(); // get the decentralized RPC endpoint
+//     const tonweb = new TonWeb(new TonWeb.HttpProvider(endpoint)); // initialize tonweb library
+
+//     //     // make some query to mainnet
+//     //     //const balance = await tonweb.getBalance("EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N");
+//     //     //expect(parseInt(balance)).toBeGreaterThan(0);
+// });

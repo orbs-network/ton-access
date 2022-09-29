@@ -85,6 +85,7 @@ interface Config {
   protocol?: "toncenter-api-v2" | "ton-api-v4" | "adnl-proxy" // default: toncenter-api-v2
   host?: string // default: "ton.gateway.orbs.network"
   version?: number // default: 1
+  suffix?: string; // default: "jsonRPC"
 };
 
 const endpoint = await getHttpEndpoint(config: Config);
@@ -93,13 +94,20 @@ const endpoint = await getHttpEndpoint(config: Config);
 * `network` - override which TON network do you want to use:
   * `mainnet` - TON mainnet (default)
   * `testnet` - the first TON testnet
-  * `sandbox` - the second TON testnet created by TON whales and used by TonHub
-  
+  * `sandbox` - the second TON testnet created by TON whales and used by TonHub  
+
+&nbsp;    
+
 * `protocol` - override the RPC protocol you want to use:
   * `toncenter-api-v2` - [TonCenter HTTP API v2](https://toncenter.com/api/v2/) (replaces the https://toncenter.com/api/v2/jsonRPC endpoint)
   * `ton-api-v4` - [TonHub HTTP API v4](https://github.com/ton-foundation/ton-api-v4) (replaces the https://mainnet-v4.tonhubapi.com endpoint)
   * `adnl-proxy` - [Raw ADNL Proxy](https://github.com/ton-community/ton-lite-client)
-  
+
+&nbsp;  
+
+* `suffix` - the http-rpc endpoint to call, default is 
+  * watch [toncenter](https://toncenter.com/api/v2/) for example
+    
 &nbsp;  
   
 ## Benefits of using the Orbs TON Gateway

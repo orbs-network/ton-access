@@ -16,7 +16,7 @@
             // onLoad
             document.addEventListener('DOMContentLoaded', function () {
                 // default endpoint
-                window.getHttpEndpoint().then((url) => {
+                window.TonGateway.getHttpEndpoint().then((url) => {
                     console.log('default endpoint is: ', url);
                 });
 
@@ -27,7 +27,7 @@
                     protocol: "toncenter-api-v2"
                 };
 
-                let gateway = new window.tonGateway(config);
+                let gateway = window.TonGateway.create(config);
                 gateway.init().then(() => {
                     // get container
                     let tonUrls = document.getElementById("ton-urls");
