@@ -805,8 +805,15 @@
             network: (config === null || config === void 0 ? void 0 : config.network) || "mainnet",
             protocol: (config === null || config === void 0 ? void 0 : config.protocol) || "toncenter-api-v2",
             host: (config === null || config === void 0 ? void 0 : config.host) || "ton.gateway.orbs.network",
-            suffix: (config === null || config === void 0 ? void 0 : config.suffix) || "jsonRPC"
+            suffix: (config === null || config === void 0 ? void 0 : config.suffix) || ""
           };
+          switch (this.config.protocol) {
+            case "toncenter-api-v2":
+              this.config.suffix = "jsonRPC";
+              break;
+            case "ton-api-v4":
+              break;
+          }
           this.nodes = new nodes_1.Nodes();
         }
         Gateway2.prototype.init = function() {
