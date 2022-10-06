@@ -82,6 +82,16 @@ test('ton-npm', async () => {
     expect(parseInt(balance)).toBeGreaterThan(0);
 });
 
+/// v4
+import { TonClient4 } from "ton";
+test('ton-v4', async () => {
+    const endpoint = await getHttpEndpoint({ protocol: "ton-api-v4" });
+    const client4 = new TonClient4({ endpoint });
+    let latest = await client4.getLastBlock();
+    expect(latest).toBeDefined();
+    expect(latest.last.seqno).toBeGreaterThan(0);
+});
+
 // import TonWeb from "tonweb";
 // test('tonweb', async () => {
 //     const endpoint = await getHttpEndpoint(); // get the decentralized RPC endpoint

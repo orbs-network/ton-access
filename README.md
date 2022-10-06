@@ -12,14 +12,12 @@ Access a network of public API endpoints that allow TON dapp clients to make HTT
 &nbsp;
 
 ## Getting Started
-
-### Using Node.js:
-
 ```
 npm install @orbs-network/ton-gateway
 ```
+### Using toncenter-api-v2 Node.js:
 
-With [npm ton](https://github.com/tonwhales/ton) library:
+#### With [npm ton](https://github.com/tonwhales/ton) library:
 
 ```ts
 import { TonClient, Address } from "ton";
@@ -33,7 +31,7 @@ const address = Address.parseFriendly("EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAO
 const balance = await client.getBalance(address);
 ```
 
-With [TonWeb](https://github.com/toncenter/tonweb) library:
+#### With [TonWeb](https://github.com/toncenter/tonweb) library:
 
 ```js
 import TonWeb from "tonweb";
@@ -45,8 +43,17 @@ const tonweb = new TonWeb(new TonWeb.HttpProvider(endpoint)); // initialize tonw
 // make some query to mainnet
 const balance = await tonweb.getBalance("EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N");
 ```
+### Using ton-api-v4 Node.js:
+```js
+import { TonClient4 } from "ton";
 
-## Using browser script:
+const endpoint = await getHttpEndpoint({ protocol: "ton-api-v4" });
+const client4 = new TonClient4({ endpoint });
+let latest = await client4.getLastBlock();
+console.log(latest.last.seqno);
+```
+
+### Using browser script:
 
 ```html
 <script src="https://cdn.jsdelivr.net/gh/orbs-network/ton-gateway@1.1.1/dist/index.min.js"></script>
@@ -85,7 +92,7 @@ interface Config {
   protocol?: "toncenter-api-v2" | "ton-api-v4" | "adnl-proxy" // default: toncenter-api-v2
   host?: string // default: "ton.gateway.orbs.network"
   version?: number // default: 1
-  suffix?: string; // default: "jsonRPC"
+  suffix?: string; // default: ""
 };
 
 const endpoint = await getHttpEndpoint(config: Config);
@@ -105,8 +112,9 @@ const endpoint = await getHttpEndpoint(config: Config);
 
 &nbsp;  
 
-* `suffix` - the http-rpc endpoint to call, default is 
-  * watch [toncenter](https://toncenter.com/api/v2/) for example
+* `suffix` - the http-rpc endpoint to call, default is per protocol 
+  * toncenter-api-v2 : "/jsonRPC"
+  * ton-api-v4 : ""
     
 &nbsp;  
   

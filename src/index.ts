@@ -27,8 +27,18 @@ export class Gateway {
       network: config?.network || "mainnet",
       protocol: config?.protocol || "toncenter-api-v2",
       host: config?.host || "ton.gateway.orbs.network",
-      suffix: config?.suffix || "jsonRPC"
+      suffix: config?.suffix || ""
     };
+
+    switch (this.config.protocol) {
+      case "toncenter-api-v2":
+        this.config.suffix = "jsonRPC";
+        break;
+      case "ton-api-v4":
+        // keep empty
+        break;
+
+    }
 
     this.nodes = new Nodes();
   }
