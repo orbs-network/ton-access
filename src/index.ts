@@ -28,7 +28,7 @@ export class Gateway {
       network: config?.network || "mainnet",
       protocol: config?.protocol || "toncenter-api-v2",
       host: config?.host || "ton.gateway.orbs.network",
-      format: config?.format || "default"
+      format: config?.format || "default",
     };
 
     // inti empty
@@ -54,7 +54,7 @@ export class Gateway {
             // leave empty for user -or client-lib impl to add suffix
             break;
           case "json-rpc":
-            console.error('[json-rpc] format is not supported in [ton-api-v4]');
+            console.error("[json-rpc] format is not supported in [ton-api-v4]");
         }
         break;
     }
@@ -71,8 +71,7 @@ export class Gateway {
     const urlVersion = this.config.version?.toString() || 1;
     const network = this.config.network;
     const protocol = this.config.protocol;
-    if (!suffixPath)
-      suffixPath = this.formatSuffix;
+    if (!suffixPath) suffixPath = this.formatSuffix;
 
     return `https://${this.config.host}/${nodeName}/${urlVersion}/${network}/${protocol}/${suffixPath}`;
   }
@@ -101,7 +100,6 @@ export async function getWsEndpoint(config?: Config) {
   return undefined;
 }
 
-
 // debug
 // import { TonClient4 } from "ton";
 // async function sanity() {
@@ -110,7 +108,6 @@ export async function getWsEndpoint(config?: Config) {
 //   const latest = await client4.getLastBlock();
 //   console.log(latest);
 // }
-
 
 // if (require.main === module) {
 //   sanity();
