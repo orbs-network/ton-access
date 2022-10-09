@@ -92,7 +92,7 @@ interface Config {
   protocol?: "toncenter-api-v2" | "ton-api-v4" | "adnl-proxy" // default: toncenter-api-v2
   host?: string // default: "ton.gateway.orbs.network"
   version?: number // default: 1
-  suffix?: string; // default: ""
+  format?: "default" | "json-rpc" | "rest"; // default: "json-rpc"
 };
 
 const endpoint = await getHttpEndpoint(config: Config);
@@ -112,9 +112,16 @@ const endpoint = await getHttpEndpoint(config: Config);
 
 &nbsp;  
 
-* `suffix` - the http-rpc endpoint to call, default is per protocol 
-  * toncenter-api-v2 : "/jsonRPC"
-  * ton-api-v4 : ""
+* `format` - how to build the endpoint, default is per protocol 
+  * toncenter-api-v2
+    * default:  /jsonRPC
+    * json-rpc: /jsonRPC
+    * rest: /
+  * ton-api-v4
+    * default:  /    
+    * rest: /
+    * json-rpc - not supported
+
     
 &nbsp;  
   

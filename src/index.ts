@@ -12,13 +12,14 @@ export interface Config {
   network?: "mainnet" | "testnet" | "sandbox"; // default: mainnet
   protocol?: "toncenter-api-v2" | "ton-api-v4" | "adnl-proxy"; // default: toncenter-api-v2
   host?: string; // default: "ton.gateway.orbs.network"
-  suffix?: string; // default: "jsonRPC"
+  format?: "default" | "json-rpc" | "rest"; // default: "json-rpc"
 }
 
 export class Gateway {
   //////////////////////////////////
   config: Config;
   nodes: Nodes;
+  formatSuffix: string;
 
   //////////////////////////////////
   constructor(config?: Config) {
@@ -27,17 +28,35 @@ export class Gateway {
       network: config?.network || "mainnet",
       protocol: config?.protocol || "toncenter-api-v2",
       host: config?.host || "ton.gateway.orbs.network",
-      suffix: config?.suffix || ""
+      format: config?.format || "default"
     };
 
+    // inti empty
+    this.formatSuffix = "";
+
+    // determind formatSuffix
     switch (this.config.protocol) {
       case "toncenter-api-v2":
-        this.config.suffix = "jsonRPC";
+        switch (this.config.format) {
+          case "json-rpc":
+          case "default":
+            this.formatSuffix = "jsonRPC";
+            break;
+          case "rest":
+            // leave empty for user to add
+            break;
+        }
         break;
       case "ton-api-v4":
-        // keep empty
+        switch (this.config.format) {
+          case "default":
+          case "rest":
+            // leave empty for user -or client-lib impl to add suffix
+            break;
+          case "json-rpc":
+            console.error('[json-rpc] format is not supported in [ton-api-v4]');
+        }
         break;
-
     }
 
     this.nodes = new Nodes();
@@ -53,7 +72,7 @@ export class Gateway {
     const network = this.config.network;
     const protocol = this.config.protocol;
     if (!suffixPath)
-      suffixPath = this.config.suffix;
+      suffixPath = this.formatSuffix;
 
     return `https://${this.config.host}/${nodeName}/${urlVersion}/${network}/${protocol}/${suffixPath}`;
   }
@@ -84,44 +103,15 @@ export async function getWsEndpoint(config?: Config) {
 
 
 // debug
-// import { TonClient, Address } from "ton";
+// import { TonClient4 } from "ton";
 // async function sanity() {
-//   // const config: Config = {
-//   //   urlVersion: 1,
-//   //   network: "mainnet",
-//   //   protocol: "toncenter"
-//   // };
-//   // const host = "ton.gateway.orbs.network";
-
-//   const httpEndpoint = await getHttpEndpoint();
-//   console.log(httpEndpoint);
-
-//   //import { getHttpEndpoint } from "@orbs-network/ton-gateway";
-
-//   const client = new TonClient({ endpoint: httpEndpoint + '/jsonRPC' }); // initialize ton library
-
-//   // make some query to mainnet        
-//   const address = Address.parseFriendly("EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N").address;
-//   const balance = await client.getBalance(address);
-//   console.log(balance);
-
-//   // sanity
-//   const endpoint = "getMasterchainInfo";
-
-//   const gw = new Gateway();
-//   await gw.init();
-//   let url;
-//   url = gw.getNextNodeUrl(endpoint);
-//   url = gw.getNextNodeUrl(endpoint);
-//   url = gw.getNextNodeUrl(endpoint);
-
-//   const s = new Set<string>;
-//   for (let i = 0; i < 20; ++i) {
-//     s.add(gw.getRandNodeUrl(endpoint));
-//   }
-//   console.log(s.size);
-//   // expect(s.size).toBe(2);
+//   const endpoint = await getHttpEndpoint({ protocol: "ton-api-v4" });
+//   const client4 = new TonClient4({ endpoint });
+//   const latest = await client4.getLastBlock();
+//   console.log(latest);
 // }
+
+
 // if (require.main === module) {
 //   sanity();
 // }
