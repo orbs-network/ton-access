@@ -805,13 +805,28 @@
             network: (config === null || config === void 0 ? void 0 : config.network) || "mainnet",
             protocol: (config === null || config === void 0 ? void 0 : config.protocol) || "toncenter-api-v2",
             host: (config === null || config === void 0 ? void 0 : config.host) || "ton.gateway.orbs.network",
-            suffix: (config === null || config === void 0 ? void 0 : config.suffix) || ""
+            format: (config === null || config === void 0 ? void 0 : config.format) || "default"
           };
+          this.formatSuffix = "";
           switch (this.config.protocol) {
             case "toncenter-api-v2":
-              this.config.suffix = "jsonRPC";
+              switch (this.config.format) {
+                case "json-rpc":
+                case "default":
+                  this.formatSuffix = "jsonRPC";
+                  break;
+                case "rest":
+                  break;
+              }
               break;
             case "ton-api-v4":
+              switch (this.config.format) {
+                case "default":
+                case "rest":
+                  break;
+                case "json-rpc":
+                  console.error("[json-rpc] format is not supported in [ton-api-v4]");
+              }
               break;
           }
           this.nodes = new nodes_1.Nodes();
@@ -835,7 +850,7 @@
           var network = this.config.network;
           var protocol = this.config.protocol;
           if (!suffixPath)
-            suffixPath = this.config.suffix;
+            suffixPath = this.formatSuffix;
           return "https://".concat(this.config.host, "/").concat(nodeName, "/").concat(urlVersion, "/").concat(network, "/").concat(protocol, "/").concat(suffixPath);
         };
         Gateway2.prototype.getNextNodeUrl = function(suffixPath, committeeOnly) {

@@ -1,6 +1,6 @@
 {
   "name": "@orbs-network/ton-gateway",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Unthrottled anonymous RPC access to TON blockchain via a robust decentralized network",
   "source": "lib/index.js",
   "main": "lib/index.js",
@@ -33,6 +33,7 @@
   },
   "homepage": "https://github.com/orbs-network/ton-gateway#readme",
   "devDependencies": {
+    "@types/bn.js": "^5.1.1",
     "@types/isomorphic-fetch": "^0.0.36",
     "@types/jest": "^28.1.7",
     "buffer": "^6.0.3",

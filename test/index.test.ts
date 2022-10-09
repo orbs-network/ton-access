@@ -53,7 +53,7 @@ test('NextAndRand', async () => {
 });
 
 test('jsonRPC', async () => {
-    let url = await getHttpEndpoint();
+    const url = await getHttpEndpoint();
     // url += '/jsonRPC' - default
     const body = { "id": "1", "jsonrpc": "2.0", "method": "runGetMethod", "params": { "address": "0:f4f590eb7d85d4f8778afa1771c0f43772304e22c7ec194072ca9fd220368f5c", "method": "get_jetton_data", "stack": [] } };
     const rawResponse = await fetch(url, {
@@ -78,11 +78,12 @@ test('ton-npm', async () => {
     // make a query to mainnet
     const address = Address.parseFriendly("EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N").address;
     const balance = await client.getBalance(address);
-
-    expect(parseInt(balance)).toBeGreaterThan(0);
+    expect(balance).toBeDefined();
+    const example = "60583653849101971";
+    expect(balance.toString().length).toBe(example.length);
 });
 
-/// v4
+// v4
 import { TonClient4 } from "ton";
 test('ton-v4', async () => {
     const endpoint = await getHttpEndpoint({ protocol: "ton-api-v4" });
@@ -91,13 +92,3 @@ test('ton-v4', async () => {
     expect(latest).toBeDefined();
     expect(latest.last.seqno).toBeGreaterThan(0);
 });
-
-// import TonWeb from "tonweb";
-// test('tonweb', async () => {
-//     const endpoint = await getHttpEndpoint(); // get the decentralized RPC endpoint
-//     const tonweb = new TonWeb(new TonWeb.HttpProvider(endpoint)); // initialize tonweb library
-
-//     //     // make some query to mainnet
-//     //     //const balance = await tonweb.getBalance("EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N");
-//     //     //expect(parseInt(balance)).toBeGreaterThan(0);
-// });
