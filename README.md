@@ -92,7 +92,7 @@ interface Config {
   protocol?: "toncenter-api-v2" | "ton-api-v4" | "adnl-proxy" // default: toncenter-api-v2
   host?: string // default: "ton.gateway.orbs.network"
   version?: number // default: 1
-  format?: "default" | "json-rpc" | "rest"; // default: "json-rpc"
+  format?: "default" | "json-rpc" | "rest"; // default: "default"
 };
 
 const endpoint = await getHttpEndpoint(config: Config);
@@ -100,8 +100,8 @@ const endpoint = await getHttpEndpoint(config: Config);
 
 * `network` - override which TON network do you want to use:
   * `mainnet` - TON mainnet (default)
-  * `testnet` - the first TON testnet
-  * `sandbox` - the second TON testnet created by TON whales and used by TonHub  
+  * `testnet` - (supported only in toncenter-api-v2) the first TON testnet
+  * `sandbox` - (supported only in toncenter-api-v2) the second TON testnet created by TON whales and used by TonHub  
 
 &nbsp;    
 

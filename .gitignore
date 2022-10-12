@@ -109,3 +109,5 @@ typings/
 .DS_Store
 
 yarn.lock
+
+todo.md

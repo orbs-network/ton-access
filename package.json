@@ -32,9 +32,11 @@
     "url": "https://github.com/orbs-network/ton-gateway/issues"
   },
   "homepage": "https://github.com/orbs-network/ton-gateway#readme",
+  "dependencies": {
+    "@types/isomorphic-fetch": "^0.0.36"
+  },
   "devDependencies": {
     "@types/bn.js": "^5.1.1",
-    "@types/isomorphic-fetch": "^0.0.36",
     "@types/jest": "^28.1.7",
     "buffer": "^6.0.3",
     "esbuild": "^0.15.5",
