@@ -31,18 +31,17 @@ export class Nodes {
       const data = await response.json();
       topology = data as Node[];
     } catch (e) {
-      throw new Error(`exception in fetch(${nodesUrl}): ${e}`)
+      throw new Error(`exception in fetch(${nodesUrl}): ${e}`);
     }
 
     // remove unhealthy nodes
     for (const node of topology) {
-      if (node.Healthy === '1') {
+      if (node.Healthy === "1") {
         this.topology.push(node);
       }
     }
     if (this.topology.length === 0)
-      throw new Error(`no healthy nodes retrieved`)
-
+      throw new Error(`no healthy nodes retrieved`);
   }
   ///////////////////////////////////
   getNextNode(committeeOnly: boolean = true) {

@@ -78,7 +78,9 @@ export class Gateway {
       switch (network) {
         case "testnet":
         case "sandbox":
-          throw new Error("sandbox and testent are supported only in toncenter-api-v2");
+          throw new Error(
+            "sandbox and testent are supported only in toncenter-api-v2"
+          );
       }
     }
 
