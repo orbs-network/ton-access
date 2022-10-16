@@ -73,6 +73,15 @@ export class Gateway {
     const protocol = this.config.protocol;
     if (!suffixPath) suffixPath = this.formatSuffix;
 
+    // testnet and sandbox supported only on toncenter-api-v2
+    if (protocol !== "toncenter-api-v2") {
+      switch (network) {
+        case "testnet":
+        case "sandbox":
+          throw new Error("sandbox and testent are supported only in toncenter-api-v2");
+      }
+    }
+
     return `https://${this.config.host}/${nodeName}/${urlVersion}/${network}/${protocol}/${suffixPath}`;
   }
   //////////////////////////////////
@@ -99,16 +108,3 @@ export async function getHttpEndpoint(config?: Config): Promise<string> {
 export async function getWsEndpoint(config?: Config) {
   return undefined;
 }
-
-// debug
-// import { TonClient4 } from "ton";
-// async function sanity() {
-//   const endpoint = await getHttpEndpoint({ protocol: "ton-api-v4" });
-//   const client4 = new TonClient4({ endpoint });
-//   const latest = await client4.getLastBlock();
-//   console.log(latest);
-// }
-
-// if (require.main === module) {
-//   sanity();
-// }
