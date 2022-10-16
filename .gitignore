@@ -111,3 +111,5 @@ typings/
 yarn.lock
 
 todo.md
+
+debug.js

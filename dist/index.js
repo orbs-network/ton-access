@@ -636,13 +636,14 @@
         }
         Nodes2.prototype.init = function(nodesUrl) {
           return __awaiter(this, void 0, void 0, function() {
-            var response, data, e_1;
+            var topology, response, data, e_1, _i, topology_1, node;
             return __generator(this, function(_a) {
               switch (_a.label) {
                 case 0:
                   this.nodeIndex = -1;
                   this.committee.clear();
                   this.topology = [];
+                  topology = [];
                   _a.label = 1;
                 case 1:
                   _a.trys.push([1, 4, , 5]);
@@ -652,13 +653,20 @@
                   return [4, response.json()];
                 case 3:
                   data = _a.sent();
-                  this.topology = data;
+                  topology = data;
                   return [3, 5];
                 case 4:
                   e_1 = _a.sent();
-                  console.error("exception in fetch(".concat(nodesUrl, "):"), e_1);
-                  return [3, 5];
+                  throw new Error("exception in fetch(".concat(nodesUrl, "): ").concat(e_1));
                 case 5:
+                  for (_i = 0, topology_1 = topology; _i < topology_1.length; _i++) {
+                    node = topology_1[_i];
+                    if (node.Healthy === "1") {
+                      this.topology.push(node);
+                    }
+                  }
+                  if (this.topology.length === 0)
+                    throw new Error("no healthy nodes retrieved");
                   return [2];
               }
             });
@@ -851,6 +859,13 @@
           var protocol = this.config.protocol;
           if (!suffixPath)
             suffixPath = this.formatSuffix;
+          if (protocol !== "toncenter-api-v2") {
+            switch (network) {
+              case "testnet":
+              case "sandbox":
+                throw new Error("sandbox and testent are supported only in toncenter-api-v2");
+            }
+          }
           return "https://".concat(this.config.host, "/").concat(nodeName, "/").concat(urlVersion, "/").concat(network, "/").concat(protocol, "/").concat(suffixPath);
         };
         Gateway2.prototype.getNextNodeUrl = function(suffixPath, committeeOnly) {

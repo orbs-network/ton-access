@@ -3,6 +3,7 @@ import "isomorphic-fetch";
 interface Node {
   Name: string;
   Ip: string;
+  Healthy: string;
 }
 ///////////////////////////////////
 export class Nodes {
@@ -24,13 +25,24 @@ export class Nodes {
     this.committee.clear();
     this.topology = [];
 
+    let topology = [];
     try {
       const response = await fetch(nodesUrl);
       const data = await response.json();
-      this.topology = data as Node[];
+      topology = data as Node[];
     } catch (e) {
-      console.error(`exception in fetch(${nodesUrl}):`, e);
+      throw new Error(`exception in fetch(${nodesUrl}): ${e}`)
     }
+
+    // remove unhealthy nodes
+    for (const node of topology) {
+      if (node.Healthy === '1') {
+        this.topology.push(node);
+      }
+    }
+    if (this.topology.length === 0)
+      throw new Error(`no healthy nodes retrieved`)
+
   }
   ///////////////////////////////////
   getNextNode(committeeOnly: boolean = true) {
