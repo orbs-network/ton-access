@@ -128,7 +128,7 @@ const endpoint = await getHttpEndpoint(config: Config);
 ## Cache & Rate limits:
 * The gateway is using [Fastly](https://manage.fastly.com/)cache control
     * request results has 2 seconds TTL
-    * there is a rate limit of 100 request per 1 minute  
+    * there is a rate limit of 10rps over 1 minute  
 ## Benefits of using the Orbs TON Gateway
 
 1. **No throttling for anonymous users**
