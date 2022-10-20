@@ -65,8 +65,11 @@ test('jsonRPC', async () => {
         },
         body: JSON.stringify(body)
     });
+    // cors headers
+    expect(rawResponse.headers.get("access-control-allow-origin")).toBe("*");
+    expect(rawResponse.headers.get("access-control-allow-headers")).toBe("X-API-key,X-API-key,X-Ton-Client-Version,DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type");
     const content = await rawResponse.json();
-
+    // response status
     expect(content.ok).toBe(true);
 });
 
@@ -85,10 +88,21 @@ test('ton-npm', async () => {
 
 // v4
 import { TonClient4 } from "ton";
+import { Nodes } from '../src/nodes';
 test('ton-v4', async () => {
     const endpoint = await getHttpEndpoint({ protocol: "ton-api-v4" });
     const client4 = new TonClient4({ endpoint });
     let latest = await client4.getLastBlock();
     expect(latest).toBeDefined();
     expect(latest.last.seqno).toBeGreaterThan(0);
+});
+
+import "isomorphic-fetch";
+test('nodes-api', async () => {
+    const gateway = new Gateway();
+    const url = "https://ton.gateway.orbs.network/nodes";
+    const res = await fetch(url);
+    const nodes = await res.json() as Node[];
+
+    expect(nodes.length).toBeGreaterThan(0);
 });
