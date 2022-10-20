@@ -133,7 +133,7 @@ const endpoint = await getHttpEndpoint(config: Config);
 
 1. **No throttling for anonymous users**
 
-    RPC gateways like https://toncenter.com/api/v2/jsonRPC throttle anonymous users to 1 request per second. Most dapps cannot operate under these restrictions since their users are anonymous. The Orbs Network endpoints are designed to serve anonymous dapp users and will not restrict your users from using your dapp client.
+    RPC gateways like https://toncenter.com/api/v2/jsonRPC throttle anonymous users to 1 request per second. Most dapps cannot operate under these restrictions since their users are anonymous. The Orbs Network endpoints are designed to serve anonymous dapp users and will not restrict your users from using your dapp client, except the generous rate limit mentioned above.
     
 2. **No need for registering an API Key**
 
