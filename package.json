@@ -37,9 +37,8 @@
   },
   "devDependencies": {
     "@types/bn.js": "^5.1.1",
-    "@types/jest": "^28.1.7",
     "@types/isomorphic-fetch": "^0.0.36",
-    "ton-lite-client": "npm:@truecarry/ton-lite-client@^1.6.1",
+    "@types/jest": "^28.1.7",
     "buffer": "^6.0.3",
     "esbuild": "^0.15.5",
     "jest": "^28.1.3",

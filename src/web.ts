@@ -1,4 +1,4 @@
-import { Gateway, getHttpEndpoint, Config } from "./index";
+import { Gateway, getTonCenterV2Endpoint } from "./index";
 
 declare global {
   interface Window {
@@ -7,8 +7,8 @@ declare global {
 }
 
 window.TonGateway = {
-  create: (config: Config) => {
-    return new Gateway(config);
+  create: () => {
+    return new Gateway();
   },
-  getHttpEndpoint,
+  getTonCenterV2Endpoint,
 };

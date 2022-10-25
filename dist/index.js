@@ -804,39 +804,13 @@
         }
       };
       Object.defineProperty(exports, "__esModule", { value: true });
-      exports.getWsEndpoint = exports.getHttpEndpoint = exports.Gateway = void 0;
+      exports.getTonApiV4Endpoint = exports.getTonApiV4Endpoints = exports.getTonCenterV2Endpoint = exports.getTonCenterV2Endpoints = exports.Gateway = void 0;
       var nodes_1 = require_nodes();
       var Gateway = function() {
-        function Gateway2(config) {
-          this.config = {
-            version: (config === null || config === void 0 ? void 0 : config.version) || 1,
-            network: (config === null || config === void 0 ? void 0 : config.network) || "mainnet",
-            protocol: (config === null || config === void 0 ? void 0 : config.protocol) || "toncenter-api-v2",
-            host: (config === null || config === void 0 ? void 0 : config.host) || "ton.gateway.orbs.network",
-            format: (config === null || config === void 0 ? void 0 : config.format) || "default"
-          };
+        function Gateway2() {
+          this.host = "ton.gateway.orbs.network";
+          this.urlVersion = 1;
           this.formatSuffix = "";
-          switch (this.config.protocol) {
-            case "toncenter-api-v2":
-              switch (this.config.format) {
-                case "json-rpc":
-                case "default":
-                  this.formatSuffix = "jsonRPC";
-                  break;
-                case "rest":
-                  break;
-              }
-              break;
-            case "ton-api-v4":
-              switch (this.config.format) {
-                case "default":
-                case "rest":
-                  break;
-                case "json-rpc":
-                  console.error("[json-rpc] format is not supported in [ton-api-v4]");
-              }
-              break;
-          }
           this.nodes = new nodes_1.Nodes();
         }
         Gateway2.prototype.init = function() {
@@ -844,7 +818,7 @@
             return __generator(this, function(_a) {
               switch (_a.label) {
                 case 0:
-                  return [4, this.nodes.init("https://".concat(this.config.host, "/nodes"))];
+                  return [4, this.nodes.init("https://".concat(this.host, "/nodes"))];
                 case 1:
                   _a.sent();
                   return [2];
@@ -852,65 +826,91 @@
             });
           });
         };
-        Gateway2.prototype.buildUrl = function(nodeName, suffixPath) {
-          var _a;
-          var urlVersion = ((_a = this.config.version) === null || _a === void 0 ? void 0 : _a.toString()) || 1;
-          var network = this.config.network;
-          var protocol = this.config.protocol;
-          if (!suffixPath)
-            suffixPath = this.formatSuffix;
-          if (protocol !== "toncenter-api-v2") {
-            switch (network) {
-              case "testnet":
-              case "sandbox":
-                throw new Error("sandbox and testent are supported only in toncenter-api-v2");
-            }
+        Gateway2.prototype.buildUrls = function(network, protocol, suffix) {
+          if (!suffix)
+            suffix = "";
+          var res = [];
+          var len = this.nodes.topology.length;
+          for (var i = 0; i < len; ++i) {
+            var node = this.nodes.getNextNode();
+            var url = "https://".concat(this.host, "/").concat(node.Name, "/").concat(this.urlVersion, "/").concat(network, "/").concat(protocol, "/").concat(suffix);
+            res.push(url);
           }
-          return "https://".concat(this.config.host, "/").concat(nodeName, "/").concat(urlVersion, "/").concat(network, "/").concat(protocol, "/").concat(suffixPath);
-        };
-        Gateway2.prototype.getNextNodeUrl = function(suffixPath, committeeOnly) {
-          if (committeeOnly === void 0) {
-            committeeOnly = false;
-          }
-          if (!this.nodes.topology.length)
-            throw new Error("Call init() first");
-          return this.buildUrl(this.nodes.getNextNode().Name, suffixPath);
-        };
-        Gateway2.prototype.getRandNodeUrl = function(suffixPath, committeeOnly) {
-          if (committeeOnly === void 0) {
-            committeeOnly = false;
-          }
-          if (!this.nodes.topology.length)
-            throw new Error("Call init() first");
-          return this.buildUrl(this.nodes.getRandomNode().Name, suffixPath);
+          return res;
         };
         return Gateway2;
       }();
       exports.Gateway = Gateway;
-      function getHttpEndpoint(config) {
+      function getTonCenterV2Endpoints(network, suffix) {
         return __awaiter(this, void 0, void 0, function() {
-          var gateway;
+          var gateway, res;
           return __generator(this, function(_a) {
             switch (_a.label) {
               case 0:
-                gateway = new Gateway(config);
+                if (!network)
+                  network = "mainnet";
+                if (!suffix)
+                  suffix = "jsonRPC";
+                gateway = new Gateway();
                 return [4, gateway.init()];
               case 1:
                 _a.sent();
-                return [2, gateway.getRandNodeUrl()];
+                res = gateway.buildUrls(network, "toncenter-api-v2", suffix);
+                return [2, res];
             }
           });
         });
       }
-      exports.getHttpEndpoint = getHttpEndpoint;
-      function getWsEndpoint(config) {
+      exports.getTonCenterV2Endpoints = getTonCenterV2Endpoints;
+      function getTonCenterV2Endpoint(network, suffix) {
         return __awaiter(this, void 0, void 0, function() {
+          var endpoints, index;
           return __generator(this, function(_a) {
-            return [2, void 0];
+            switch (_a.label) {
+              case 0:
+                return [4, getTonCenterV2Endpoints(network, suffix)];
+              case 1:
+                endpoints = _a.sent();
+                index = Math.floor(Math.random() * endpoints.length);
+                return [2, endpoints[index]];
+            }
           });
         });
       }
-      exports.getWsEndpoint = getWsEndpoint;
+      exports.getTonCenterV2Endpoint = getTonCenterV2Endpoint;
+      function getTonApiV4Endpoints() {
+        return __awaiter(this, void 0, void 0, function() {
+          var gateway, res;
+          return __generator(this, function(_a) {
+            switch (_a.label) {
+              case 0:
+                gateway = new Gateway();
+                return [4, gateway.init()];
+              case 1:
+                _a.sent();
+                res = gateway.buildUrls("mainnet", "ton-api-v4");
+                return [2, res];
+            }
+          });
+        });
+      }
+      exports.getTonApiV4Endpoints = getTonApiV4Endpoints;
+      function getTonApiV4Endpoint() {
+        return __awaiter(this, void 0, void 0, function() {
+          var endpoints, index;
+          return __generator(this, function(_a) {
+            switch (_a.label) {
+              case 0:
+                return [4, getTonApiV4Endpoints()];
+              case 1:
+                endpoints = _a.sent();
+                index = Math.floor(Math.random() * endpoints.length);
+                return [2, endpoints[index]];
+            }
+          });
+        });
+      }
+      exports.getTonApiV4Endpoint = getTonApiV4Endpoint;
     }
   });
 
@@ -920,10 +920,10 @@
       Object.defineProperty(exports, "__esModule", { value: true });
       var index_1 = require_lib();
       window.TonGateway = {
-        create: function(config) {
-          return new index_1.Gateway(config);
+        create: function() {
+          return new index_1.Gateway();
         },
-        getHttpEndpoint: index_1.getHttpEndpoint
+        getTonCenterV2Endpoint: index_1.getTonCenterV2Endpoint
       };
     }
   });

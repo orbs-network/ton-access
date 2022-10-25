@@ -3,6 +3,7 @@
         "adnl",
         "Masterchain",
         "tesnet",
-        "toncenter"
+        "toncenter",
+        "tonweb"
     ]
 }
