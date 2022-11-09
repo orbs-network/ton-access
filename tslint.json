@@ -4,6 +4,8 @@
         "tslint-config-prettier"
     ],
     "rules": {
-        "no-console": false
+        "no-console": false,
+        "comment-format": false,
+        "no-empty": false
     }
 }
