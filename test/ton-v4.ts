@@ -4,12 +4,25 @@ import { TonClient4 } from "ton";
 import "isomorphic-fetch";
 
 describe('ton-V4', function () {
-    it('latest should has valid seqno', async () => {
+    it('last should has valid seqno', async () => {
         const endpoint = await getTonApiV4Endpoint();
+        console.log("endpoint:", endpoint)
         const client4 = new TonClient4({ endpoint });
-        let latest = await client4.getLastBlock();
-        expect(latest).to.not.be.undefined;
-        expect(latest.last.seqno).to.be.above(0);
+        let last = await client4.getLastBlock();
+        expect(last).to.not.be.undefined;
+        expect(last.last.seqno).to.be.above(24920000);
+    });
+
+    ///block/latest
+    it('explicit suffix latest block - leading slash will be removed', async () => {
+        const endpoint = await getTonApiV4Endpoint('/block/latest');
+        console.log("endpoint:", endpoint)
+
+        const last = await fetch(endpoint);
+        expect(last).to.not.be.undefined;
+        const json = await last.json();
+        expect(json).to.not.be.undefined;
+        expect(json.last.seqno).to.be.above(24920000);
     });
 
 

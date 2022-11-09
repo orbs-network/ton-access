@@ -4,8 +4,10 @@ import { getTonCenterV2Endpoint } from '../src/index';
 describe('ton-center-V2', function () {
 
     it('should return ok=true getMasterchainInfo mainnet', async function () {
-        const url = await getTonCenterV2Endpoint("mainnet", "getMasterchainInfo");
-        const res = await fetch(url);
+        const endpoint = await getTonCenterV2Endpoint("mainnet", "getMasterchainInfo");
+        console.log("endpoint:", endpoint);
+
+        const res = await fetch(endpoint);
         //console.log(expect);
         expect(res).to.not.be.undefined;
         ////expect(res).to.be.defined();
@@ -14,10 +16,12 @@ describe('ton-center-V2', function () {
     });
 
     it('jsonRPC POST should return cors headers and content.ok == true', async () => {
-        const url = await getTonCenterV2Endpoint();
-        // url += '/jsonRPC' - default
+        const endpoint = await getTonCenterV2Endpoint();
+        console.log("endpoint:", endpoint);
+
+        // endpoint += '/jsonRPC' - default
         const body = { "id": "1", "jsonrpc": "2.0", "method": "runGetMethod", "params": { "address": "0:f4f590eb7d85d4f8778afa1771c0f43772304e22c7ec194072ca9fd220368f5c", "method": "get_jetton_data", "stack": [] } };
-        const rawResponse = await fetch(url, {
+        const rawResponse = await fetch(endpoint, {
             method: 'POST',
             //mode: 'cors',
             headers: {

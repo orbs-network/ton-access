@@ -27,6 +27,9 @@ export class Gateway {
     if (!suffix)
       suffix = "";
 
+    // remove leading slash
+    if (suffix.length)
+      suffix = suffix.replace(/^\/+/, '');
 
     const res: string[] = [];
     const len = this.nodes.topology.length;
@@ -70,12 +73,13 @@ export async function getTonCenterV2Endpoint(network?: Network, suffix?: string)
 }
 
 // API V4 - multi
-export async function getTonApiV4Endpoints(): Promise<string[]> {
-  return await getEndpoints("mainnet", "ton-api-v4");
+export async function getTonApiV4Endpoints(suffix?: string): Promise<string[]> {
+  // other networks than mainnet are not supported
+  return await getEndpoints("mainnet", "ton-api-v4", suffix);
 }
 // API V4 - single
-export async function getTonApiV4Endpoint(): Promise<string> {
-  const endpoints = await getTonApiV4Endpoints();
+export async function getTonApiV4Endpoint(suffix?: string): Promise<string> {
+  const endpoints = await getTonApiV4Endpoints(suffix);
   const index = Math.floor(Math.random() * endpoints.length);
   return endpoints[index];
 }
