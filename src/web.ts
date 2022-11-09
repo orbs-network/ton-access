@@ -1,4 +1,3 @@
-
 import { Gateway, getTonCenterV2Endpoint, getTonApiV4Endpoint } from "./index";
 declare global {
   interface Window {
@@ -11,5 +10,5 @@ window.TonGateway = {
     return new Gateway();
   },
   getTonCenterV2Endpoint,
-  getTonApiV4Endpoint
+  getTonApiV4Endpoint,
 };

@@ -11,7 +11,6 @@ export class Gateway {
 
   //////////////////////////////////
   constructor() {
-
     this.host = "ton.gateway.orbs.network";
     this.urlVersion = 1;
 
@@ -24,12 +23,10 @@ export class Gateway {
   //////////////////////////////////
   buildUrls(network?: Network, protocol?: Protocol, suffix?: string): string[] {
     // default params
-    if (!suffix)
-      suffix = "";
+    if (!suffix) suffix = "";
 
     // remove leading slash
-    if (suffix.length)
-      suffix = suffix.replace(/^\/+/, '');
+    if (suffix.length) suffix = suffix.replace(/^\/+/, "");
 
     const res: string[] = [];
     const len = this.nodes.topology.length;
@@ -40,12 +37,14 @@ export class Gateway {
     }
     return res;
   }
-
-
 }
 //////////////////////////////
 // private get multi endpoints
-async function getEndpoints(network?: Network, protocol?: Protocol, suffix?: string): Promise<string[]> {
+async function getEndpoints(
+  network?: Network,
+  protocol?: Protocol,
+  suffix?: string
+): Promise<string[]> {
   const gateway = new Gateway();
   await gateway.init();
   const res = gateway.buildUrls(network, protocol, suffix);
@@ -56,17 +55,21 @@ async function getEndpoints(network?: Network, protocol?: Protocol, suffix?: str
 // global exported explicit functions
 
 // toncenter multi
-export async function getTonCenterV2Endpoints(network?: Network, suffix?: string): Promise<string[]> {
+export async function getTonCenterV2Endpoints(
+  network?: Network,
+  suffix?: string
+): Promise<string[]> {
   // default params
-  if (!network)
-    network = "mainnet";
-  if (!suffix)
-    suffix = "jsonRPC";
+  if (!network) network = "mainnet";
+  if (!suffix) suffix = "jsonRPC";
 
   return await getEndpoints(network, "toncenter-api-v2", suffix);
 }
 // toncenter single
-export async function getTonCenterV2Endpoint(network?: Network, suffix?: string): Promise<string> {
+export async function getTonCenterV2Endpoint(
+  network?: Network,
+  suffix?: string
+): Promise<string> {
   const endpoints = await getTonCenterV2Endpoints(network, suffix);
   const index = Math.floor(Math.random() * endpoints.length);
   return endpoints[index];
@@ -88,9 +91,9 @@ export async function getTonApiV4Endpoint(suffix?: string): Promise<string> {
 export async function getAdnlProxyEndpoints(): Promise<string[]> {
   return [
     //"ws://ton-http-2:30001"
-    "ws://18.221.31.187:30001"
+    "ws://18.221.31.187:30001",
     //"ws://3.140.253.61:30001",
-  ]
+  ];
 }
 // export async function getAdnlProxyEndpoint(): Promise<string> {
 //   const endpoints = await getAdnlProxyEndpoints();
