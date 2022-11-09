@@ -1,15 +1,13 @@
 "use strict";
-(function() {
+(() => {
   var __getOwnPropNames = Object.getOwnPropertyNames;
-  var __commonJS = function(cb, mod) {
-    return function __require() {
-      return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
-    };
+  var __commonJS = (cb, mod) => function __require() {
+    return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
   };
 
   // node_modules/whatwg-fetch/dist/fetch.umd.js
   var require_fetch_umd = __commonJS({
-    "node_modules/whatwg-fetch/dist/fetch.umd.js": function(exports, module) {
+    "node_modules/whatwg-fetch/dist/fetch.umd.js"(exports, module) {
       (function(global, factory) {
         typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : factory(global.WHATWGFetch = {});
       })(exports, function(exports2) {
@@ -67,7 +65,7 @@
           var iterator = {
             next: function() {
               var value = items.shift();
-              return { done: value === void 0, value: value };
+              return { done: value === void 0, value };
             }
           };
           if (support.iterable) {
@@ -402,7 +400,7 @@
           if (redirectStatuses.indexOf(status) === -1) {
             throw new RangeError("Invalid status code");
           }
-          return new Response(null, { status: status, headers: { location: url } });
+          return new Response(null, { status, headers: { location: url } });
         };
         exports2.DOMException = global.DOMException;
         try {
@@ -512,7 +510,7 @@
 
   // node_modules/isomorphic-fetch/fetch-npm-browserify.js
   var require_fetch_npm_browserify = __commonJS({
-    "node_modules/isomorphic-fetch/fetch-npm-browserify.js": function(exports, module) {
+    "node_modules/isomorphic-fetch/fetch-npm-browserify.js"(exports, module) {
       require_fetch_umd();
       module.exports = self.fetch.bind(self);
     }
@@ -520,7 +518,7 @@
 
   // lib/nodes.js
   var require_nodes = __commonJS({
-    "lib/nodes.js": function(exports) {
+    "lib/nodes.js"(exports) {
       "use strict";
       var __awaiter = exports && exports.__awaiter || function(thisArg, _arguments, P, generator) {
         function adopt(value) {
@@ -549,156 +547,57 @@
           step((generator = generator.apply(thisArg, _arguments || [])).next());
         });
       };
-      var __generator = exports && exports.__generator || function(thisArg, body) {
-        var _ = { label: 0, sent: function() {
-          if (t[0] & 1)
-            throw t[1];
-          return t[1];
-        }, trys: [], ops: [] }, f, y, t, g;
-        return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() {
-          return this;
-        }), g;
-        function verb(n) {
-          return function(v) {
-            return step([n, v]);
-          };
-        }
-        function step(op) {
-          if (f)
-            throw new TypeError("Generator is already executing.");
-          while (_)
-            try {
-              if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done)
-                return t;
-              if (y = 0, t)
-                op = [op[0] & 2, t.value];
-              switch (op[0]) {
-                case 0:
-                case 1:
-                  t = op;
-                  break;
-                case 4:
-                  _.label++;
-                  return { value: op[1], done: false };
-                case 5:
-                  _.label++;
-                  y = op[1];
-                  op = [0];
-                  continue;
-                case 7:
-                  op = _.ops.pop();
-                  _.trys.pop();
-                  continue;
-                default:
-                  if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
-                    _ = 0;
-                    continue;
-                  }
-                  if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
-                    _.label = op[1];
-                    break;
-                  }
-                  if (op[0] === 6 && _.label < t[1]) {
-                    _.label = t[1];
-                    t = op;
-                    break;
-                  }
-                  if (t && _.label < t[2]) {
-                    _.label = t[2];
-                    _.ops.push(op);
-                    break;
-                  }
-                  if (t[2])
-                    _.ops.pop();
-                  _.trys.pop();
-                  continue;
-              }
-              op = body.call(thisArg, _);
-            } catch (e) {
-              op = [6, e];
-              y = 0;
-            } finally {
-              f = t = 0;
-            }
-          if (op[0] & 5)
-            throw op[1];
-          return { value: op[0] ? op[1] : void 0, done: true };
-        }
-      };
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Nodes = void 0;
       require_fetch_npm_browserify();
-      var Nodes = function() {
-        function Nodes2() {
+      var Nodes = class {
+        constructor() {
           this.nodeIndex = -1;
           this.committee = /* @__PURE__ */ new Set();
           this.topology = [];
         }
-        Nodes2.prototype.init = function(nodesUrl) {
-          return __awaiter(this, void 0, void 0, function() {
-            var topology, response, data, e_1, _i, topology_1, node;
-            return __generator(this, function(_a) {
-              switch (_a.label) {
-                case 0:
-                  this.nodeIndex = -1;
-                  this.committee.clear();
-                  this.topology = [];
-                  topology = [];
-                  _a.label = 1;
-                case 1:
-                  _a.trys.push([1, 4, , 5]);
-                  return [4, fetch(nodesUrl)];
-                case 2:
-                  response = _a.sent();
-                  return [4, response.json()];
-                case 3:
-                  data = _a.sent();
-                  topology = data;
-                  return [3, 5];
-                case 4:
-                  e_1 = _a.sent();
-                  throw new Error("exception in fetch(".concat(nodesUrl, "): ").concat(e_1));
-                case 5:
-                  for (_i = 0, topology_1 = topology; _i < topology_1.length; _i++) {
-                    node = topology_1[_i];
-                    if (node.Healthy === "1") {
-                      this.topology.push(node);
-                    }
-                  }
-                  if (this.topology.length === 0)
-                    throw new Error("no healthy nodes retrieved");
-                  return [2];
+        init(nodesUrl) {
+          return __awaiter(this, void 0, void 0, function* () {
+            this.nodeIndex = -1;
+            this.committee.clear();
+            this.topology = [];
+            let topology = [];
+            try {
+              const response = yield fetch(nodesUrl);
+              const data = yield response.json();
+              topology = data;
+            } catch (e) {
+              throw new Error(`exception in fetch(${nodesUrl}): ${e}`);
+            }
+            for (const node of topology) {
+              if (node.Healthy === "1") {
+                this.topology.push(node);
               }
-            });
+            }
+            if (this.topology.length === 0)
+              throw new Error(`no healthy nodes retrieved`);
           });
-        };
-        Nodes2.prototype.getNextNode = function(committeeOnly) {
-          if (committeeOnly === void 0) {
-            committeeOnly = true;
-          }
+        }
+        getNextNode(committeeOnly = true) {
           while (true) {
             this.nodeIndex++;
             if (this.nodeIndex >= this.topology.length)
               this.nodeIndex = 0;
             return this.topology[this.nodeIndex];
           }
-        };
-        Nodes2.prototype.getRandomNode = function(committeeOnly) {
-          if (committeeOnly === void 0) {
-            committeeOnly = true;
-          }
-          var index = Math.floor(Math.random() * this.topology.length);
+        }
+        getRandomNode(committeeOnly = true) {
+          const index = Math.floor(Math.random() * this.topology.length);
           return this.topology[index];
-        };
-        return Nodes2;
-      }();
+        }
+      };
       exports.Nodes = Nodes;
     }
   });
 
   // lib/index.js
   var require_lib = __commonJS({
-    "lib/index.js": function(exports) {
+    "lib/index.js"(exports) {
       "use strict";
       var __awaiter = exports && exports.__awaiter || function(thisArg, _arguments, P, generator) {
         function adopt(value) {
@@ -727,203 +626,96 @@
           step((generator = generator.apply(thisArg, _arguments || [])).next());
         });
       };
-      var __generator = exports && exports.__generator || function(thisArg, body) {
-        var _ = { label: 0, sent: function() {
-          if (t[0] & 1)
-            throw t[1];
-          return t[1];
-        }, trys: [], ops: [] }, f, y, t, g;
-        return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() {
-          return this;
-        }), g;
-        function verb(n) {
-          return function(v) {
-            return step([n, v]);
-          };
-        }
-        function step(op) {
-          if (f)
-            throw new TypeError("Generator is already executing.");
-          while (_)
-            try {
-              if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done)
-                return t;
-              if (y = 0, t)
-                op = [op[0] & 2, t.value];
-              switch (op[0]) {
-                case 0:
-                case 1:
-                  t = op;
-                  break;
-                case 4:
-                  _.label++;
-                  return { value: op[1], done: false };
-                case 5:
-                  _.label++;
-                  y = op[1];
-                  op = [0];
-                  continue;
-                case 7:
-                  op = _.ops.pop();
-                  _.trys.pop();
-                  continue;
-                default:
-                  if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
-                    _ = 0;
-                    continue;
-                  }
-                  if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
-                    _.label = op[1];
-                    break;
-                  }
-                  if (op[0] === 6 && _.label < t[1]) {
-                    _.label = t[1];
-                    t = op;
-                    break;
-                  }
-                  if (t && _.label < t[2]) {
-                    _.label = t[2];
-                    _.ops.push(op);
-                    break;
-                  }
-                  if (t[2])
-                    _.ops.pop();
-                  _.trys.pop();
-                  continue;
-              }
-              op = body.call(thisArg, _);
-            } catch (e) {
-              op = [6, e];
-              y = 0;
-            } finally {
-              f = t = 0;
-            }
-          if (op[0] & 5)
-            throw op[1];
-          return { value: op[0] ? op[1] : void 0, done: true };
-        }
-      };
       Object.defineProperty(exports, "__esModule", { value: true });
-      exports.getTonApiV4Endpoint = exports.getTonApiV4Endpoints = exports.getTonCenterV2Endpoint = exports.getTonCenterV2Endpoints = exports.Gateway = void 0;
+      exports.getAdnlProxyEndpoints = exports.getTonApiV4Endpoint = exports.getTonApiV4Endpoints = exports.getTonCenterV2Endpoint = exports.getTonCenterV2Endpoints = exports.Gateway = void 0;
       var nodes_1 = require_nodes();
-      var Gateway = function() {
-        function Gateway2() {
+      var Gateway = class {
+        constructor() {
           this.host = "ton.gateway.orbs.network";
           this.urlVersion = 1;
-          this.formatSuffix = "";
           this.nodes = new nodes_1.Nodes();
         }
-        Gateway2.prototype.init = function() {
-          return __awaiter(this, void 0, void 0, function() {
-            return __generator(this, function(_a) {
-              switch (_a.label) {
-                case 0:
-                  return [4, this.nodes.init("https://".concat(this.host, "/nodes"))];
-                case 1:
-                  _a.sent();
-                  return [2];
-              }
-            });
+        init() {
+          return __awaiter(this, void 0, void 0, function* () {
+            yield this.nodes.init(`https://${this.host}/nodes`);
           });
-        };
-        Gateway2.prototype.buildUrls = function(network, protocol, suffix) {
+        }
+        buildUrls(network, protocol, suffix) {
           if (!suffix)
             suffix = "";
-          var res = [];
-          var len = this.nodes.topology.length;
-          for (var i = 0; i < len; ++i) {
-            var node = this.nodes.getNextNode();
-            var url = "https://".concat(this.host, "/").concat(node.Name, "/").concat(this.urlVersion, "/").concat(network, "/").concat(protocol, "/").concat(suffix);
+          const res = [];
+          const len = this.nodes.topology.length;
+          for (let i = 0; i < len; ++i) {
+            const node = this.nodes.getNextNode();
+            const url = `https://${this.host}/${node.Name}/${this.urlVersion}/${network}/${protocol}/${suffix}`;
             res.push(url);
           }
           return res;
-        };
-        return Gateway2;
-      }();
+        }
+      };
       exports.Gateway = Gateway;
+      function getEndpoints(network, protocol, suffix) {
+        return __awaiter(this, void 0, void 0, function* () {
+          const gateway = new Gateway();
+          yield gateway.init();
+          const res = gateway.buildUrls(network, protocol, suffix);
+          return res;
+        });
+      }
       function getTonCenterV2Endpoints(network, suffix) {
-        return __awaiter(this, void 0, void 0, function() {
-          var gateway, res;
-          return __generator(this, function(_a) {
-            switch (_a.label) {
-              case 0:
-                if (!network)
-                  network = "mainnet";
-                if (!suffix)
-                  suffix = "jsonRPC";
-                gateway = new Gateway();
-                return [4, gateway.init()];
-              case 1:
-                _a.sent();
-                res = gateway.buildUrls(network, "toncenter-api-v2", suffix);
-                return [2, res];
-            }
-          });
+        return __awaiter(this, void 0, void 0, function* () {
+          if (!network)
+            network = "mainnet";
+          if (!suffix)
+            suffix = "jsonRPC";
+          return yield getEndpoints(network, "toncenter-api-v2", suffix);
         });
       }
       exports.getTonCenterV2Endpoints = getTonCenterV2Endpoints;
       function getTonCenterV2Endpoint(network, suffix) {
-        return __awaiter(this, void 0, void 0, function() {
-          var endpoints, index;
-          return __generator(this, function(_a) {
-            switch (_a.label) {
-              case 0:
-                return [4, getTonCenterV2Endpoints(network, suffix)];
-              case 1:
-                endpoints = _a.sent();
-                index = Math.floor(Math.random() * endpoints.length);
-                return [2, endpoints[index]];
-            }
-          });
+        return __awaiter(this, void 0, void 0, function* () {
+          const endpoints = yield getTonCenterV2Endpoints(network, suffix);
+          const index = Math.floor(Math.random() * endpoints.length);
+          return endpoints[index];
         });
       }
       exports.getTonCenterV2Endpoint = getTonCenterV2Endpoint;
       function getTonApiV4Endpoints() {
-        return __awaiter(this, void 0, void 0, function() {
-          var gateway, res;
-          return __generator(this, function(_a) {
-            switch (_a.label) {
-              case 0:
-                gateway = new Gateway();
-                return [4, gateway.init()];
-              case 1:
-                _a.sent();
-                res = gateway.buildUrls("mainnet", "ton-api-v4");
-                return [2, res];
-            }
-          });
+        return __awaiter(this, void 0, void 0, function* () {
+          return yield getEndpoints("mainnet", "ton-api-v4");
         });
       }
       exports.getTonApiV4Endpoints = getTonApiV4Endpoints;
       function getTonApiV4Endpoint() {
-        return __awaiter(this, void 0, void 0, function() {
-          var endpoints, index;
-          return __generator(this, function(_a) {
-            switch (_a.label) {
-              case 0:
-                return [4, getTonApiV4Endpoints()];
-              case 1:
-                endpoints = _a.sent();
-                index = Math.floor(Math.random() * endpoints.length);
-                return [2, endpoints[index]];
-            }
-          });
+        return __awaiter(this, void 0, void 0, function* () {
+          const endpoints = yield getTonApiV4Endpoints();
+          const index = Math.floor(Math.random() * endpoints.length);
+          return endpoints[index];
         });
       }
       exports.getTonApiV4Endpoint = getTonApiV4Endpoint;
+      function getAdnlProxyEndpoints() {
+        return __awaiter(this, void 0, void 0, function* () {
+          return [
+            "ws://18.221.31.187:30001"
+          ];
+        });
+      }
+      exports.getAdnlProxyEndpoints = getAdnlProxyEndpoints;
     }
   });
 
   // lib/web.js
   var require_web = __commonJS({
-    "lib/web.js": function(exports) {
+    "lib/web.js"(exports) {
       Object.defineProperty(exports, "__esModule", { value: true });
       var index_1 = require_lib();
       window.TonGateway = {
-        create: function() {
+        create: () => {
           return new index_1.Gateway();
         },
-        getTonCenterV2Endpoint: index_1.getTonCenterV2Endpoint
+        getTonCenterV2Endpoint: index_1.getTonCenterV2Endpoint,
+        getTonApiV4Endpoint: index_1.getTonApiV4Endpoint
       };
     }
   });
