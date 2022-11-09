@@ -643,6 +643,8 @@
         buildUrls(network, protocol, suffix) {
           if (!suffix)
             suffix = "";
+          if (suffix.length)
+            suffix = suffix.replace(/^\/+/, "");
           const res = [];
           const len = this.nodes.topology.length;
           for (let i = 0; i < len; ++i) {
@@ -680,15 +682,15 @@
         });
       }
       exports.getTonCenterV2Endpoint = getTonCenterV2Endpoint;
-      function getTonApiV4Endpoints() {
+      function getTonApiV4Endpoints(suffix) {
         return __awaiter(this, void 0, void 0, function* () {
-          return yield getEndpoints("mainnet", "ton-api-v4");
+          return yield getEndpoints("mainnet", "ton-api-v4", suffix);
         });
       }
       exports.getTonApiV4Endpoints = getTonApiV4Endpoints;
-      function getTonApiV4Endpoint() {
+      function getTonApiV4Endpoint(suffix) {
         return __awaiter(this, void 0, void 0, function* () {
-          const endpoints = yield getTonApiV4Endpoints();
+          const endpoints = yield getTonApiV4Endpoints(suffix);
           const index = Math.floor(Math.random() * endpoints.length);
           return endpoints[index];
         });

@@ -21,9 +21,9 @@ npm install @orbs-network/ton-gateway
 
 ```ts
 import { TonClient, Address } from "ton";
-import { getHttpEndpoint } from "@orbs-network/ton-gateway";
+import { getTonCenterV2Endpoint } from "@orbs-network/ton-gateway";
 
-const endpoint = await getHttpEndpoint(); // get the decentralized RPC endpoint
+const endpoint = await getTonCenterV2Endpoint(); // get the decentralized RPC endpoint
 const client = new TonClient({ endpoint }); // initialize ton library
 
 // make some query to mainnet
@@ -35,9 +35,9 @@ const balance = await client.getBalance(address);
 
 ```js
 import TonWeb from "tonweb";
-import { getHttpEndpoint } from "@orbs-network/ton-gateway";
+import { getTonCenterV2Endpoint } from "@orbs-network/ton-gateway";
 
-const endpoint = await getHttpEndpoint(); // get the decentralized RPC endpoint
+const endpoint = await getTonCenterV2Endpoint(); // get the decentralized RPC endpoint
 const tonweb = new TonWeb(new TonWeb.HttpProvider(endpoint)); // initialize tonweb library
 
 // make some query to mainnet
@@ -46,17 +46,18 @@ const balance = await tonweb.getBalance("EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bp
 ### Using ton-api-v4 Node.js:
 ```js
 import { TonClient4 } from "ton";
+import { getTonApiV4Endpoint } from "@orbs-network/ton-gateway";
 
-const endpoint = await getHttpEndpoint({ protocol: "ton-api-v4" });
+const endpoint = await getTonApiV4Endpoint();
 const client4 = new TonClient4({ endpoint });
 let latest = await client4.getLastBlock();
-console.log(latest.last.seqno);
+console.log('latest seqno is:',latest.last.seqno);
 ```
 
 ### Using browser script:
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/orbs-network/ton-gateway@1.1.1/dist/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/orbs-network/ton-gateway@1.4.0/dist/index.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/toncenter/tonweb/dist/tonweb.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -74,53 +75,35 @@ console.log(latest.last.seqno);
 &nbsp;
 
 
-## Alternative Configurations
+## Parameters
 
-Use testnet instead of mainnet:
-
+### toncenter-V2
 ```ts
-const endpoint = await getHttpEndpoint({
-  network: "testnet" // specify "sandbox" for the second ton testnet
-});
+export async function getTonCenterV2Endpoint(network?: Network, suffix?: string): Promise<string> 
 ```
-
-### Config object:
-
-```ts
-interface Config {
-  network?: "mainnet" | "testnet" | "sandbox" // default: mainnet
-  protocol?: "toncenter-api-v2" | "ton-api-v4" | "adnl-proxy" // default: toncenter-api-v2
-  host?: string // default: "ton.gateway.orbs.network"
-  version?: number // default: 1
-  format?: "default" | "json-rpc" | "rest"; // default: "default"
-};
-
-const endpoint = await getHttpEndpoint(config: Config);
-```
-
 * `network` - override which TON network do you want to use:
   * `mainnet` - TON mainnet (default)
   * `testnet` - (supported only in toncenter-api-v2) the first TON testnet
-  * `sandbox` - (supported only in toncenter-api-v2) the second TON testnet created by TON whales and used by TonHub  
 
-&nbsp;    
+* `suffix` - endpoints trailing path suffix, default is `jsonRPC`
+  * check toncenter [api v2 docs](https://toncenter.com/api/v2/) eg. `getMasterchainInfo`
 
-* `protocol` - override the RPC protocol you want to use:
-  * `toncenter-api-v2` - [TonCenter HTTP API v2](https://toncenter.com/api/v2/) (replaces the https://toncenter.com/api/v2/jsonRPC endpoint)
-  * `ton-api-v4` - [TonHub HTTP API v4](https://github.com/ton-foundation/ton-api-v4) (replaces the https://mainnet-v4.tonhubapi.com endpoint)
-  * `adnl-proxy` - [Raw ADNL Proxy](https://github.com/ton-community/ton-lite-client)
+### ton-api-V4
+```ts
+export async function getTonApiV4Endpoint(suffix?: string): Promise<string> 
+```
+* `suffix` - endpoints trailing path suffix, default is empty string 
+  * check toncenter [api v4 docs](https://github.com/orbs-network/ton-api-v4/blob/main/README.md) eg. `/block/latest`
 
-&nbsp;  
+- example:
+```ts
+  const endpoint = await getTonApiV4Endpoint('/block/latest');
+  // returns https://ton.gateway.orbs.network/.../1/mainnet/ton-api-v4/block/latest
 
-* `format` - how to build the endpoint, default is per protocol 
-  * toncenter-api-v2
-    * default:  /jsonRPC
-    * json-rpc: /jsonRPC
-    * rest: /
-  * ton-api-v4
-    * default:  /    
-    * rest: /
-    * json-rpc - not supported
+  const last = await fetch(endpoint);    
+  const json = await last.json();
+  console.log('last seqno is:', json.last.seqno);
+```
 
     
 &nbsp;  
