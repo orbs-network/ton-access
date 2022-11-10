@@ -51,4 +51,20 @@ describe('ton-center-V2', function () {
         expect(balance.toString().length).to.eq(example.length);
     });
 
+    // Route API
+
+    it('rout api should work', async () => {
+        const endpoint = "https://ton.gateway.orbs.network/route/1/mainnet/toncenter-api-v2/jsonRPC";
+        console.log("rout-endpoint:", endpoint);
+        const client = new TonClient({ endpoint });
+
+
+        // make a query to mainnet
+        const address = Address.parseFriendly("EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N").address;
+        const balance = await client.getBalance(address);
+        expect(balance).to.not.be.undefined;
+        const example = "60583653849101971";
+        expect(balance.toString().length).to.eq(example.length);
+    });
+
 });
