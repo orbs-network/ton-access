@@ -105,19 +105,19 @@ lets the edge randomly choses with which backend gateway to pass the call to, as
 ## Gateway node
 ### Protocols / Flavours 
 - `protocol` (or flavor)
-		- `toncenter-api-v2` 
-			- [docs](https://toncenter.com/api/v2/) 
-			- two dockers per each network running on the GW node.
-			- possible run redis for internal cache (see in docs) 
-		- `ton-api-v4`
-			- [docs](https://github.com/orbs-network/ton-api-v4)
-			- only one mainnet docker
-			- compiled by orbs to use [this fix](https://github.com/TrueCarry/ton-lite-client) 
-		- `adnl-proxy`
-			- [docs](https://github.com/tonstack/wsadnlroxy)
-			- websocket listener - edge should be ware of
-			- compiled go process
-			- needs a watchdog
+	- `toncenter-api-v2` 
+		- [docs](https://toncenter.com/api/v2/) 
+		- two dockers per each network running on the GW node.
+		- possible run redis for internal cache (see in docs) 
+	- `ton-api-v4`
+		- [docs](https://github.com/orbs-network/ton-api-v4)
+		- only one mainnet docker
+		- compiled by orbs to use [this fix](https://github.com/TrueCarry/ton-lite-client) 
+	- `adnl-proxy`
+		- [docs](https://github.com/tonstack/wsadnlroxy)
+		- websocket listener - edge should be ware of
+		- compiled go process
+		- needs a watchdog
 ## Lite Server
 - [become a ton validator](https://github.com/ton-blockchain/mytonctrl/blob/master/docs/en/manual-ubuntu.md)
 - extract config liteserver part to be used by protocols
