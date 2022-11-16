@@ -714,7 +714,8 @@
         create: () => {
           return new index_1.Gateway();
         },
-        getHttpEndpoint: index_1.getHttpEndpoint
+        getHttpEndpoint: index_1.getHttpEndpoint,
+        getTonApiV4Endpoint: index_1.getTonApiV4Endpoint
       };
     }
   });
