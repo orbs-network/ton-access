@@ -14,8 +14,9 @@ describe('ton-V4', function () {
     });
 
     ///block/latest
-    it('explicit suffix latest block - leading slash will be removed', async () => {
-        const endpoint = await getTonApiV4Endpoint('/block/latest');
+    it('explicit suffix latest block', async () => {
+        let endpoint = await getTonApiV4Endpoint();
+        endpoint += 'block/latest'
         console.log("endpoint:", endpoint)
 
         const last = await fetch(endpoint);

@@ -1,22 +1,24 @@
 import { expect } from 'chai';
 import { TonClient, Address } from "ton";
-import { getTonCenterV2Endpoint } from '../src/index';
-describe('ton-center-V2', function () {
+import TonWeb from "tonweb";
+import { getHttpEndpoint } from '../src/index';
 
+
+describe('ton-center-V2', function () {
     it('should return ok=true getMasterchainInfo mainnet', async function () {
-        const endpoint = await getTonCenterV2Endpoint("mainnet", "getMasterchainInfo");
+        let endpoint = await getHttpEndpoint({ protocol: 'rest' });
+        endpoint += "getMasterchainInfo"
+
         console.log("endpoint:", endpoint);
 
         const res = await fetch(endpoint);
-        //console.log(expect);
         expect(res).to.not.be.undefined;
-        ////expect(res).to.be.defined();
         const jsn = await res.json();
         expect(jsn.ok).to.equal(true);
     });
 
     it('jsonRPC POST should return cors headers and content.ok == true', async () => {
-        const endpoint = await getTonCenterV2Endpoint();
+        const endpoint = await getHttpEndpoint();
         console.log("endpoint:", endpoint);
 
         // endpoint += '/jsonRPC' - default
@@ -38,21 +40,30 @@ describe('ton-center-V2', function () {
         expect(content.ok).to.eq(true);
     });
 
-
-    it('ton-npm balance should be length like 60583653849101971', async () => {
-        const endpoint = await getTonCenterV2Endpoint();
+    const example = "60583653849101971";
+    it('TonClient ton-npm balance should be length like 60583653849101971', async () => {
+        const endpoint = await getHttpEndpoint();
+        console.log("endpoint:", endpoint);
         const client = new TonClient({ endpoint });
 
         // make a query to mainnet
         const address = Address.parseFriendly("EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N").address;
         const balance = await client.getBalance(address);
         expect(balance).to.not.be.undefined;
-        const example = "60583653849101971";
+        expect(balance.toString().length).to.eq(example.length);
+    });
+
+    it('TonWeb v2 balance should be length like 40715907771234645', async () => {
+        const endpoint = await getHttpEndpoint(); // get the decentralized RPC endpoint
+        const tonweb = new TonWeb(new TonWeb.HttpProvider(endpoint)); // initialize tonweb library
+
+        // make some query to mainnet
+        const balance = await tonweb.getBalance("EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N");
+        expect(balance).to.not.be.undefined;
         expect(balance.toString().length).to.eq(example.length);
     });
 
     // Route API
-
     it('rout api should work', async () => {
         const endpoint = "https://ton.gateway.orbs.network/route/1/mainnet/toncenter-api-v2/jsonRPC";
         console.log("rout-endpoint:", endpoint);
