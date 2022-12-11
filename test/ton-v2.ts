@@ -16,6 +16,17 @@ describe('ton-center-V2', function () {
         const jsn = await res.json();
         expect(jsn.ok).to.equal(true);
     });
+    // it('should return ok=true getMasterchainInfo testnet', async function () {
+    //     let endpoint = await getHttpEndpoint({ network: 'testnet' });
+    //     endpoint += "getMasterchainInfo"
+
+    //     console.log("endpoint:", endpoint);
+
+    //     const res = await fetch(endpoint);
+    //     expect(res).to.not.be.undefined;
+    //     const jsn = await res.json();
+    //     expect(jsn.ok).to.equal(true);
+    // });
 
     it('jsonRPC POST should return cors headers and content.ok == true', async () => {
         const endpoint = await getHttpEndpoint();

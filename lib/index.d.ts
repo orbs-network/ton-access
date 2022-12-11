@@ -17,6 +17,6 @@ export declare class Gateway {
 }
 export declare function getHttpEndpoints(config?: Config): Promise<string[]>;
 export declare function getHttpEndpoint(config?: Config): Promise<string>;
-export declare function getTonApiV4Endpoints(config?: Config): Promise<string[]>;
-export declare function getTonApiV4Endpoint(config?: Config): Promise<string>;
+export declare function getHttpV4Endpoints(config?: Config): Promise<string[]>;
+export declare function getHttpV4Endpoint(config?: Config): Promise<string>;
 export {};

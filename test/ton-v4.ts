@@ -1,11 +1,11 @@
 import { expect } from 'chai';
-import { getTonApiV4Endpoint } from '../src/index';
+import { getHttpV4Endpoint } from '../src/index';
 import { TonClient4 } from "ton";
 import "isomorphic-fetch";
 
 describe('ton-V4', function () {
     it('last should has valid seqno', async () => {
-        const endpoint = await getTonApiV4Endpoint();
+        const endpoint = await getHttpV4Endpoint();
         console.log("endpoint:", endpoint)
         const client4 = new TonClient4({ endpoint });
         let last = await client4.getLastBlock();
@@ -15,7 +15,7 @@ describe('ton-V4', function () {
 
     ///block/latest
     it('explicit suffix latest block', async () => {
-        let endpoint = await getTonApiV4Endpoint();
+        let endpoint = await getHttpV4Endpoint();
         endpoint += 'block/latest'
         console.log("endpoint:", endpoint)
 

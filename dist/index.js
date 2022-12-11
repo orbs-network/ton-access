@@ -627,7 +627,7 @@
         });
       };
       Object.defineProperty(exports, "__esModule", { value: true });
-      exports.getTonApiV4Endpoint = exports.getTonApiV4Endpoints = exports.getHttpEndpoint = exports.getHttpEndpoints = exports.Gateway = void 0;
+      exports.getHttpV4Endpoint = exports.getHttpV4Endpoints = exports.getHttpEndpoint = exports.getHttpEndpoints = exports.Gateway = void 0;
       var nodes_1 = require_nodes();
       var Gateway = class {
         constructor() {
@@ -683,7 +683,7 @@
         });
       }
       exports.getHttpEndpoint = getHttpEndpoint;
-      function getTonApiV4Endpoints(config) {
+      function getHttpV4Endpoints(config) {
         return __awaiter(this, void 0, void 0, function* () {
           const network = (config === null || config === void 0 ? void 0 : config.network) ? config.network : "mainnet";
           if ((config === null || config === void 0 ? void 0 : config.protocol) === "json-rpc") {
@@ -693,15 +693,15 @@
           return yield getEndpoints("mainnet", "ton-api-v4", suffix);
         });
       }
-      exports.getTonApiV4Endpoints = getTonApiV4Endpoints;
-      function getTonApiV4Endpoint(config) {
+      exports.getHttpV4Endpoints = getHttpV4Endpoints;
+      function getHttpV4Endpoint(config) {
         return __awaiter(this, void 0, void 0, function* () {
-          const endpoints = yield getTonApiV4Endpoints(config);
+          const endpoints = yield getHttpV4Endpoints(config);
           const index = Math.floor(Math.random() * endpoints.length);
           return endpoints[index];
         });
       }
-      exports.getTonApiV4Endpoint = getTonApiV4Endpoint;
+      exports.getHttpV4Endpoint = getHttpV4Endpoint;
     }
   });
 
@@ -715,7 +715,7 @@
           return new index_1.Gateway();
         },
         getHttpEndpoint: index_1.getHttpEndpoint,
-        getTonApiV4Endpoint: index_1.getTonApiV4Endpoint
+        getHttpV4Endpoint: index_1.getHttpV4Endpoint
       };
     }
   });

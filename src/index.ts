@@ -87,7 +87,7 @@ export async function getHttpEndpoint(config?: Config): Promise<string> {
 }
 
 // // API V4 - multi
-export async function getTonApiV4Endpoints(config?: Config): Promise<string[]> {
+export async function getHttpV4Endpoints(config?: Config): Promise<string[]> {
   // default params
   const network = config?.network ? config.network : "mainnet";
 
@@ -103,8 +103,8 @@ export async function getTonApiV4Endpoints(config?: Config): Promise<string[]> {
   return await getEndpoints("mainnet", "ton-api-v4", suffix);
 }
 // API V4 - single
-export async function getTonApiV4Endpoint(config?: Config): Promise<string> {
-  const endpoints = await getTonApiV4Endpoints(config);
+export async function getHttpV4Endpoint(config?: Config): Promise<string> {
+  const endpoints = await getHttpV4Endpoints(config);
   const index = Math.floor(Math.random() * endpoints.length);
   return endpoints[index];
 }
