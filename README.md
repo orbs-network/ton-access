@@ -30,8 +30,8 @@ Using HTML script:
 ### with [ton](https://github.com/tonwhales/ton) library:
 
 ```ts
-import { TonClient, Address } from "ton";
 import { getHttpEndpoint } from "@orbs-network/ton-gateway";
+import { TonClient, Address } from "ton";
 
 const endpoint = await getHttpEndpoint(); // get the decentralized RPC endpoint
 const client = new TonClient({ endpoint }); // initialize ton library
@@ -44,8 +44,8 @@ const balance = await client.getBalance(address);
 ### with [TonWeb](https://github.com/toncenter/tonweb) library:
 
 ```ts
-import TonWeb from "tonweb";
 import { getHttpEndpoint } from "@orbs-network/ton-gateway";
+import TonWeb from "tonweb";
 
 const endpoint = await getHttpEndpoint(); // get the decentralized RPC endpoint
 const tonweb = new TonWeb(new TonWeb.HttpProvider(endpoint)); // initialize tonweb library
