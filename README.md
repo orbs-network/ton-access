@@ -82,8 +82,8 @@ const balance = await tonweb.getBalance("EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bp
 import { TonClient4 } from "ton";
 import { getHttpV4Endpoint } from "@orbs-network/ton-gateway";
 
-const endpoint = await getHttpV4Endpoint();
-const client4 = new TonClient4({ endpoint });
+const endpoint = await getHttpV4Endpoint(); // get the decentralized RPC endpoint
+const client4 = new TonClient4({ endpoint }); // initialize ton library
 
 // make some query to mainnet
 const latestBlock = await client4.getLastBlock();
