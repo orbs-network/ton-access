@@ -20,7 +20,7 @@ npm install @orbs-network/ton-gateway
 
 Using HTML script:
 ```html
-<script src="https://cdn.jsdelivr.net/gh/orbs-network/ton-gateway@2.0.1/dist/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/orbs-network/ton-gateway@2.2.0/dist/index.min.js"></script>
 ```
 
 &nbsp;
@@ -57,7 +57,7 @@ const balance = await tonweb.getBalance("EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bp
 ### with TonWeb as HTML script:
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/orbs-network/ton-gateway@1.1.1/dist/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/orbs-network/ton-gateway@2.2.0/dist/index.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/toncenter/tonweb/dist/tonweb.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
