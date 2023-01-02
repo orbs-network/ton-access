@@ -76,7 +76,7 @@ describe('ton-center-V2', function () {
 
     // Route API
     it('rout api should work', async () => {
-        const endpoint = "https://ton.gateway.orbs.network/route/1/mainnet/toncenter-api-v2/jsonRPC";
+        const endpoint = "https://ton.access.orbs.network/route/1/mainnet/toncenter-api-v2/jsonRPC";
         console.log("rout-endpoint:", endpoint);
         const client = new TonClient({ endpoint });
 

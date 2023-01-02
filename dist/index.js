@@ -627,11 +627,11 @@
         });
       };
       Object.defineProperty(exports, "__esModule", { value: true });
-      exports.getHttpV4Endpoint = exports.getHttpV4Endpoints = exports.getHttpEndpoint = exports.getHttpEndpoints = exports.Gateway = void 0;
+      exports.getHttpV4Endpoint = exports.getHttpV4Endpoints = exports.getHttpEndpoint = exports.getHttpEndpoints = exports.Access = void 0;
       var nodes_1 = require_nodes();
-      var Gateway = class {
+      var Access = class {
         constructor() {
-          this.host = "ton.gateway.orbs.network";
+          this.host = "ton.access.orbs.network";
           this.urlVersion = 1;
           this.nodes = new nodes_1.Nodes();
         }
@@ -655,12 +655,12 @@
           return res;
         }
       };
-      exports.Gateway = Gateway;
+      exports.Access = Access;
       function getEndpoints(network, edgeProtocol, suffix) {
         return __awaiter(this, void 0, void 0, function* () {
-          const gateway = new Gateway();
-          yield gateway.init();
-          const res = gateway.buildUrls(network, edgeProtocol, suffix);
+          const access = new Access();
+          yield access.init();
+          const res = access.buildUrls(network, edgeProtocol, suffix);
           return res;
         });
       }
@@ -710,9 +710,9 @@
     "lib/web.js"(exports) {
       Object.defineProperty(exports, "__esModule", { value: true });
       var index_1 = require_lib();
-      window.TonGateway = {
+      window.TonAccess = {
         create: () => {
-          return new index_1.Gateway();
+          return new index_1.Access();
         },
         getHttpEndpoint: index_1.getHttpEndpoint,
         getHttpV4Endpoint: index_1.getHttpV4Endpoint

@@ -21,11 +21,11 @@ declare module "index" {
     type Network = "mainnet" | "testnet";
     export interface Config {
         host?: string;
-        gatewayVersion?: number;
+        accessVersion?: number;
         network?: Network;
         protocol?: "default" | "json-rpc" | "rest";
     }
-    export class Gateway {
+    export class Access {
         nodes: Nodes;
         host: string;
         urlVersion: number;
@@ -41,7 +41,7 @@ declare module "index" {
 declare module "web" {
     global {
         interface Window {
-            TonGateway: object;
+            TonAccess: object;
         }
     }
 }

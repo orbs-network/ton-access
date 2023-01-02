@@ -3,12 +3,12 @@ import { Nodes } from "./nodes";
 type EdgeProtocol = "toncenter-api-v2" | "ton-api-v4" | "adnl-proxy"; // default: toncenter-api-v2
 type Network = "mainnet" | "testnet"; //| "sandbox"- is deprecated ; // default: mainnet
 export interface Config {
-  host?: string; // default: "ton.gateway.orbs.network"
-  gatewayVersion?: number; // default: 1
+  host?: string; // default: "ton.access.orbs.network"
+  accessVersion?: number; // default: 1
   network?: Network;
   protocol?: "default" | "json-rpc" | "rest"; // default: "default"
 }
-export class Gateway {
+export class Access {
   //////////////////////////////////
   // config: Config;
   nodes: Nodes;
@@ -19,7 +19,7 @@ export class Gateway {
   //////////////////////////////////
   constructor() {
     // default
-    this.host = "ton.gateway.orbs.network";
+    this.host = "ton.access.orbs.network";
 
     this.urlVersion = 1;
 
@@ -59,9 +59,9 @@ async function getEndpoints(
   edgeProtocol?: EdgeProtocol,
   suffix?: string
 ): Promise<string[]> {
-  const gateway = new Gateway();
-  await gateway.init();
-  const res = gateway.buildUrls(network, edgeProtocol, suffix);
+  const access = new Access();
+  await access.init();
+  const res = access.buildUrls(network, edgeProtocol, suffix);
   return res;
 }
 

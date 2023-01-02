@@ -1,9 +1,9 @@
-<!-- <script src="https://cdn.jsdelivr.net/gh/orbs-network/ton-gateway@2.0.1/dist/index.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/gh/orbs-network/ton-acess@2.0.1/dist/index.min.js"></script> -->
 <script src="../dist/index.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/toncenter/tonweb/dist/tonweb.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        TonGateway.getHttpEndpoint().then((endpoint) => { // get the decentralized RPC endpoint
+        TonAccess.getHttpEndpoint().then((endpoint) => { // get the decentralized RPC endpoint
             const tonweb = new TonWeb(new TonWeb.HttpProvider(endpoint)); // initialize tonweb library
             // make some query to mainnet
             tonweb.getBalance("EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N").then((balance) => {

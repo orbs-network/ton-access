@@ -1,13 +1,13 @@
-import { Gateway, getHttpEndpoint, getHttpV4Endpoint } from "./index";
+import { Access, getHttpEndpoint, getHttpV4Endpoint } from "./index";
 declare global {
   interface Window {
-    TonGateway: object;
+    TonAccess: object;
   }
 }
 
-window.TonGateway = {
+window.TonAccess = {
   create: () => {
-    return new Gateway();
+    return new Access();
   },
   getHttpEndpoint,
   getHttpV4Endpoint,

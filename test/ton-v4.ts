@@ -28,7 +28,7 @@ describe('ton-V4', function () {
 
 
     it('nodes-api nodes length should be > 0', async () => {
-        const url = "https://ton.gateway.orbs.network/nodes";
+        const url = "https://ton.access.orbs.network/nodes";
         const res = await fetch(url);
         const nodes = await res.json() as Node[];
         expect(nodes.length).to.be.above(0);

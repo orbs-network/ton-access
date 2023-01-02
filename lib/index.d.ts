@@ -3,11 +3,11 @@ declare type EdgeProtocol = "toncenter-api-v2" | "ton-api-v4" | "adnl-proxy";
 declare type Network = "mainnet" | "testnet";
 export interface Config {
     host?: string;
-    gatewayVersion?: number;
+    accessVersion?: number;
     network?: Network;
     protocol?: "default" | "json-rpc" | "rest";
 }
-export declare class Gateway {
+export declare class Access {
     nodes: Nodes;
     host: string;
     urlVersion: number;

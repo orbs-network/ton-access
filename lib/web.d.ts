@@ -1,6 +1,6 @@
 declare global {
     interface Window {
-        TonGateway: object;
+        TonAccess: object;
     }
 }
 export {};
