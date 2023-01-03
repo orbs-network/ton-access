@@ -1,6 +1,6 @@
 import { Nodes } from "./nodes";
-declare type EdgeProtocol = "toncenter-api-v2" | "ton-api-v4" | "adnl-proxy";
-declare type Network = "mainnet" | "testnet";
+type EdgeProtocol = "toncenter-api-v2" | "ton-api-v4" | "adnl-proxy";
+type Network = "mainnet" | "testnet";
 export interface Config {
     host?: string;
     accessVersion?: number;
