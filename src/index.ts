@@ -1,7 +1,7 @@
 import { Nodes } from "./nodes";
 
-type EdgeProtocol = "toncenter-api-v2" | "ton-api-v4" | "adnl-proxy"; // default: toncenter-api-v2
-type Network = "mainnet" | "testnet"; //| "sandbox"- is deprecated ; // default: mainnet
+export type EdgeProtocol = "toncenter-api-v2" | "ton-api-v4" | "adnl-proxy"; // default: toncenter-api-v2
+export type Network = "mainnet" | "testnet"; //| "sandbox"- is deprecated ; // default: mainnet
 export interface Config {
   host?: string; // default: "ton.access.orbs.network"
   accessVersion?: number; // default: 1
@@ -100,7 +100,7 @@ export async function getHttpV4Endpoints(config?: Config): Promise<string[]> {
   const suffix = ""; // this is like rest - default
 
   // other networks than mainnet are not supported
-  return await getEndpoints("mainnet", "ton-api-v4", suffix);
+  return await getEndpoints(network, "ton-api-v4", suffix);
 }
 // API V4 - single
 export async function getHttpV4Endpoint(config?: Config): Promise<string> {
