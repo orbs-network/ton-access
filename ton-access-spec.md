@@ -1,11 +1,11 @@
 ﻿
-# ton-gateway spec
+# ton-access spec
 A client side decentralised access to the [ton blockchain](https://ton.org/)
 This document shows how it should be build
 
 ## Introduction (Chachak)
 - Web3 Access, Metamask, Infura
-- Decentralized Gateway to a blockchain
+- Decentralized access to a blockchain
 - Centralised bottleneck compromise
 - Why is it still decentralised
 ## overview
@@ -29,18 +29,18 @@ Client ->> Edge: getNodes()
 Client ->> Client: createEndpoints
 Client ->> Edge: callEndpoint(url)
 Edge ->> Edge: resolveUrl()
-Edge ->> Gateway: callURL()
-Gateway ->> Gateway: resolveProtocol()
-Gateway ->> LiteServer: callBlockchain()
+Edge ->> Access: callURL()
+Access ->> Access: resolveProtocol()
+Access ->> LiteServer: callBlockchain()
 LiteServer -->> Client: return()
 ```
 
 ### edge endpoint
 - client endpoint url example 
-`https://ton.gateway.orbs.network/19e116699fd6c7ad754a912af633aafec27cc456/1/mainnet/toncenter-api-v2/getMasterchainInfo`
+`https://ton.access.orbs.network/19e116699fd6c7ad754a912af633aafec27cc456/1/mainnet/toncenter-api-v2/getMasterchainInfo`
 - format `https://{edge-host}/{gw-id}/{url-version}/{network}/{protocol}/{suffix}`
-	- `edge-host` default: `ton.gateway.orbs.network` 
-	- `gw-id`: id recogniser of the gateway-node
+	- `edge-host` default: `ton.access.orbs.network` 
+	- `node-id`: id recogniser of the access-node
 	- `url-version` increase if we change edge/gw logic
 	- `network` - the blockchain network
 		- `mainnet`
@@ -56,7 +56,7 @@ LiteServer -->> Client: return()
 - uses edge/nodes api
 - bot/server that interacts with ton blockchain using the gw
 - dApp - browser client
-- implemented in typescript [npm package](https://www.npmjs.com/package/@orbs-network/ton-gateway)
+- implemented in typescript [npm package](https://www.npmjs.com/package/@orbs-network/ton-access)
 client code exaple
 ```ts
 import { getTonCenterV2Endpoint } from  '../src/index'
@@ -71,7 +71,7 @@ const  balance = await  client.getBalance(address);
 ## edge
 * SSL Termination
 * HTTP + WS
-* Healthcheck - against the gateway nodes, /nodes api should report unhealthy
+* Healthcheck - against the access nodes, /nodes api should report unhealthy
 * API
 	* /nodes 
 	* /route
@@ -81,8 +81,8 @@ const  balance = await  client.getBalance(address);
 
 ### API
 #### /nodes
-returns JSON with data about the gateway NODEs
-`https://ton.gateway.orbs.network/nodes`
+returns JSON with data about the access NODEs
+`https://ton.access.orbs.network/nodes`
 ```json
 [
 	{
@@ -100,9 +100,9 @@ returns JSON with data about the gateway NODEs
 > There should be a way for the client to authenticate the nodes are indeed a ton valid blockchain and not imposters. This kind of authentication makes the fact that the edge is centralised, a non issue.
 
 #### /route
-`https://ton.gateway.orbs.network/route/1/mainnet/toncenter-api-v2/getMasterchainInfo`
-lets the edge randomly choses with which backend gateway to pass the call to, as opposed to explicitly call the node by ID. 
-## Gateway node
+`https://ton.access.orbs.network/route/1/mainnet/toncenter-api-v2/getMasterchainInfo`
+lets the edge randomly choses with which backend access-node to pass the call to, as opposed to explicitly call the node by ID. 
+## Access node
 ### Protocols / Flavours 
 - `protocol` (or flavor)
 	- `toncenter-api-v2` 

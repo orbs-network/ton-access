@@ -1,4 +1,4 @@
-# TON Gateway
+# TON Access
 
 Unthrottled anonymous RPC access to TON blockchain via the dozens of decentralized nodes of the Orbs Network.
 
@@ -15,12 +15,12 @@ Access a network of public API endpoints that allow TON dapp clients to make HTT
 
 Using NPM:
 ```
-npm install @orbs-network/ton-gateway
+npm install @orbs-network/ton-access
 ```
 
 Using HTML script:
 ```html
-<script src="https://cdn.jsdelivr.net/gh/orbs-network/ton-gateway@2.2.0/dist/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/orbs-network/ton-access@2.2.0/dist/index.min.js"></script>
 ```
 
 &nbsp;
@@ -30,7 +30,7 @@ Using HTML script:
 ### with [ton](https://github.com/tonwhales/ton) library:
 
 ```ts
-import { getHttpEndpoint } from "@orbs-network/ton-gateway";
+import { getHttpEndpoint } from "@orbs-network/ton-access";
 import { TonClient, Address } from "ton";
 
 const endpoint = await getHttpEndpoint(); // get the decentralized RPC endpoint
@@ -44,7 +44,7 @@ const balance = await client.getBalance(address);
 ### with [TonWeb](https://github.com/toncenter/tonweb) library:
 
 ```ts
-import { getHttpEndpoint } from "@orbs-network/ton-gateway";
+import { getHttpEndpoint } from "@orbs-network/ton-access";
 import TonWeb from "tonweb";
 
 const endpoint = await getHttpEndpoint(); // get the decentralized RPC endpoint
@@ -57,11 +57,11 @@ const balance = await tonweb.getBalance("EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bp
 ### with TonWeb as HTML script:
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/orbs-network/ton-gateway@2.2.0/dist/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/orbs-network/ton-access@2.2.0/dist/index.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/toncenter/tonweb/dist/tonweb.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        TonGateway.getHttpEndpoint().then((endpoint) => { // get the decentralized RPC endpoint
+        TonAccess.getHttpEndpoint().then((endpoint) => { // get the decentralized RPC endpoint
             const tonweb = new TonWeb(new TonWeb.HttpProvider(endpoint)); // initialize tonweb library
             // make some query to mainnet
             tonweb.getBalance("EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N").then((balance) => {
@@ -80,7 +80,7 @@ const balance = await tonweb.getBalance("EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bp
 
 ```ts
 import { TonClient4 } from "ton";
-import { getHttpV4Endpoint } from "@orbs-network/ton-gateway";
+import { getHttpV4Endpoint } from "@orbs-network/ton-access";
 
 const endpoint = await getHttpV4Endpoint(); // get the decentralized RPC endpoint
 const client4 = new TonClient4({ endpoint }); // initialize ton library
@@ -98,7 +98,7 @@ const latestBlockNumber = latestBlock.last.seqno;
 
 ```ts
 import { LiteClient, LiteSingleEngine } from "ton-lite-client";
-import { getAdnlProxyEndpoint } from "@orbs-network/ton-gateway";
+import { getAdnlProxyEndpoint } from "@orbs-network/ton-access";
 
 const { endpoint, publicKey } = await getAdnlProxyEndpoint();
 const engine = new LiteSingleEngine({ host: endpoint, publicKey });
@@ -136,8 +136,8 @@ const endpoint = await getHttpEndpoint({
 ```ts
 interface Config {
   network?: "mainnet" | "testnet" // default: mainnet
-  host?: string; // default: "ton.gateway.orbs.network"
-  gatewayVersion?: number; // default: 1
+  host?: string; // default: "ton.access.orbs.network"
+  accessVersion?: number; // default: 1
   protocol?: "default" | "json-rpc" | "rest"; // default: "default"
 };
 ```
@@ -145,7 +145,7 @@ interface Config {
 * `network` - override which TON network do you want to use:
   * `mainnet` - TON mainnet (default)
   * `testnet` - the first TON testnet  
-* `gatewayVersion` - should always be `1`, reserved for future upgrades of this library
+* `accessVersion` - should always be `1`, reserved for future upgrades of this library
 * `protocol` - sub-protocol to use, depends on the type of API:
   * TonCenter HTTP API v2:
     * `default` - json-rpc
@@ -162,15 +162,15 @@ interface Config {
 
 &nbsp;  
 
-## Benefits of using the Orbs TON Gateway
+## Benefits of using the Orbs TON Access
 
 1. **No throttling for anonymous users**
 
-    RPC gateways like https://toncenter.com/api/v2/jsonRPC throttle anonymous users to 1 request per second. Most dapps cannot operate under these restrictions since their users are anonymous. The Orbs Network endpoints are designed to serve anonymous dapp users and will not restrict your users from using your dapp client, except in extreme cases of abuse.
+    RPC access like https://toncenter.com/api/v2/jsonRPC throttle anonymous users to 1 request per second. Most dapps cannot operate under these restrictions since their users are anonymous. The Orbs Network endpoints are designed to serve anonymous dapp users and will not restrict your users from using your dapp client, except in extreme cases of abuse.
     
 2. **No need for registering an API Key**
 
-    RPC gateways like https://toncenter.com/api/v2/jsonRPC reduce user throttling by requiring you to register an API Key. This API Key cannot be stored client-side since it can be abused (it's supposed to be a secret) and dapps should not run a centralized backend to store this secret since they should be decentralized.
+    RPC access like https://toncenter.com/api/v2/jsonRPC reduce user throttling by requiring you to register an API Key. This API Key cannot be stored client-side since it can be abused (it's supposed to be a secret) and dapps should not run a centralized backend to store this secret since they should be decentralized.
 
 3. **No need to run your own RPC backend**
 
@@ -178,4 +178,4 @@ interface Config {
     
 4. **Decentralized access to the chain**
 
-    By relying on https://toncenter.com/api/v2/jsonRPC, you're relying on a centralized business (toncenter.com), not a protocol. The Orbs Network TON Gateway is a decentralized protocol operated by dozens of [independent nodes](https://status.orbs.network) that are all part of the [Orbs Network](https://github.com/orbs-network). The network mainnet is running since 2019 and validators are staked with Proof-of-Stake consensus with over $100 million TVL locked. The network is extremely robust against downtime due to the number of independent nodes.
+    By relying on https://toncenter.com/api/v2/jsonRPC, you're relying on a centralized business (toncenter.com), not a protocol. The Orbs Network TON-Access is a decentralized protocol operated by dozens of [independent nodes](https://status.orbs.network) that are all part of the [Orbs Network](https://github.com/orbs-network). The network mainnet is running since 2019 and validators are staked with Proof-of-Stake consensus with over $100 million TVL locked. The network is extremely robust against downtime due to the number of independent nodes.

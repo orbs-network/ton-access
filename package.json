@@ -1,5 +1,5 @@
 {
-  "name": "@orbs-network/ton-gateway",
+  "name": "@orbs-network/ton-access",
   "version": "2.2.0",
   "description": "Unthrottled anonymous RPC access to TON blockchain via a robust decentralized network",
   "source": "lib/index.js",
@@ -27,14 +27,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/orbs-network/ton-gateway.git"
+    "url": "git+https://github.com/orbs-network/ton-access.git"
   },
   "author": "yuval@orbs.com",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/orbs-network/ton-gateway/issues"
+    "url": "https://github.com/orbs-network/ton-access/issues"
   },
-  "homepage": "https://github.com/orbs-network/ton-gateway#readme",
+  "homepage": "https://github.com/orbs-network/ton-access#readme",
   "dependencies": {
     "isomorphic-fetch": "^3.0.0"
   },
