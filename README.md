@@ -20,7 +20,7 @@ npm install @orbs-network/ton-access
 
 Using HTML script:
 ```html
-<script src="https://cdn.jsdelivr.net/gh/orbs-network/ton-access@2.2.0/dist/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/orbs-network/ton-access@2.2.1/dist/index.min.js"></script>
 ```
 
 &nbsp;
