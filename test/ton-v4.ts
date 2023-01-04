@@ -1,37 +1,30 @@
 import { expect } from 'chai';
-import { getHttpV4Endpoint, getHttpV4Endpoints, Config, Network } from '../src/index';
+import { getHttpV4Endpoint, getHttpV4Endpoints, Config } from '../src/index';
+import { sanity } from './helpers'
 
-async function sanityEndpoint(endpoint: string) {
-    endpoint += 'block/latest';
-
-    //endpoint = "https://ton.access.orbs.network/4d8be7F95Bd3F8B62C092Ab4D238bEE463E655EE/1/mainnet/ton-api-v4/block/latest";
-    const settings = { method: "Get" };
-    const res = await fetch(endpoint);
-    const jsn = await res.json();
-    console.log('endpoint:', endpoint);
-    jsn.url = endpoint;
-    console.log('seqno', jsn.last.seqno);
-    expect(jsn.last.seqno).to.be.above(10000);
-}
-async function sanity(network: Network) {
-    let config: Config = { network };
-    // mainnet all nodes    
-    let endpoints = await getHttpV4Endpoints(config);
-    let calls: Array<Promise<void>> = [];
-    for (let endpoint of endpoints) {
-        calls.push(sanityEndpoint(endpoint))
-    }
-    await Promise.all(calls);
-    console.log('sanity done!');
-
-}
 describe('ton-V4', function () {
-    this.timeout(20000);
+    this.timeout(10000);
+    // mainnet
     it('sanity - mainnet - ok status for all nodes', async () => {
-        await sanity('mainnet');
+        let config: Config = { network: 'mainnet' };
+        let endpoints = await getHttpV4Endpoints(config);
+        const results = await sanity(endpoints, 'block/latest');
+        for (let res of results) {
+            console.log('endpoint:', res.url);
+            console.log('seqno', res.last.seqno);
+            expect(res.last.seqno).to.be.above(10000);
+        }
     });
-    it('sanity - mainnet - ok status for all nodes', async () => {
-        await sanity('testnet');
+    // testnet
+    it('sanity - testnet - ok status for all nodes', async () => {
+        let config: Config = { network: 'testnet' };
+        let endpoints = await getHttpV4Endpoints(config);
+        const results = await sanity(endpoints, 'block/latest');
+        for (let res of results) {
+            console.log('endpoint:', res.url);
+            console.log('seqno', res.last.seqno);
+            expect(res.last.seqno).to.be.above(10000);
+        }
     });
     ///block/latest
     it('explicit suffix latest block', async () => {
@@ -45,7 +38,6 @@ describe('ton-V4', function () {
         expect(json).to.not.be.undefined;
         expect(json.last.seqno).to.be.above(24920000);
     });
-
 
     it('nodes-api nodes length should be > 0', async () => {
         const url = "https://ton.access.orbs.network/nodes";
