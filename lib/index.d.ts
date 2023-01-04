@@ -1,6 +1,6 @@
 import { Nodes } from "./nodes";
-type EdgeProtocol = "toncenter-api-v2" | "ton-api-v4" | "adnl-proxy";
-type Network = "mainnet" | "testnet";
+export type EdgeProtocol = "toncenter-api-v2" | "ton-api-v4" | "adnl-proxy";
+export type Network = "mainnet" | "testnet";
 export interface Config {
     host?: string;
     accessVersion?: number;
@@ -19,4 +19,3 @@ export declare function getHttpEndpoints(config?: Config): Promise<string[]>;
 export declare function getHttpEndpoint(config?: Config): Promise<string>;
 export declare function getHttpV4Endpoints(config?: Config): Promise<string[]>;
 export declare function getHttpV4Endpoint(config?: Config): Promise<string>;
-export {};

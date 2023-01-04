@@ -1,10 +1,34 @@
 import { expect } from 'chai';
 import { TonClient, Address } from "ton";
 import TonWeb from "tonweb";
-import { getHttpEndpoint } from '../src/index';
-
+import { getHttpEndpoint, getHttpEndpoints, Config } from '../src/index';
+import { sanity } from './helpers'
 
 describe('ton-center-V2', function () {
+    this.timeout(10000);
+    // mainnet
+    it('sanity - mainnet - ok status for all nodes', async () => {
+        let config: Config = { network: 'mainnet', protocol: 'rest' };
+        let endpoints = await getHttpEndpoints(config);
+        const results = await sanity(endpoints, 'getMasterchainInfo');
+        for (let res of results) {
+            console.log('endpoint:', res.url);
+            console.log('ok', res.ok);
+            expect(res.ok).to.eq(true);
+        }
+    });
+    // testnet
+    it('sanity - testnet - ok status for all nodes', async () => {
+        let config: Config = { network: 'testnet', protocol: 'rest' };
+        let endpoints = await getHttpEndpoints(config);
+        const results = await sanity(endpoints, 'getMasterchainInfo');
+        for (let res of results) {
+            console.log('endpoint:', res.url);
+            console.log('ok', res.ok);
+            expect(res.ok).to.eq(true);
+        }
+
+    });
     it('should return ok=true getMasterchainInfo mainnet', async function () {
         let endpoint = await getHttpEndpoint({ protocol: 'rest' });
         endpoint += "getMasterchainInfo"

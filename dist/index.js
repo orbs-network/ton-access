@@ -690,7 +690,7 @@
             throw Error("config.protocol json-rpc is not supported for getTonApiV4Endpoints");
           }
           const suffix = "";
-          return yield getEndpoints("mainnet", "ton-api-v4", suffix);
+          return yield getEndpoints(network, "ton-api-v4", suffix);
         });
       }
       exports.getHttpV4Endpoints = getHttpV4Endpoints;
