@@ -1,9 +1,25 @@
 import "isomorphic-fetch";
 
-interface Node {
-  Name: string;
+export type ProtoNet = "v2-mainnet" | "v2-testnet" | "v4-mainnet" | "v4-testnet";
+
+const STALE_PERIOD = 2 * 60 * 1000; // 2 Min
+
+
+interface Mngr {
+  updated: string;
+  health: { [key in ProtoNet]: boolean };
+  successTS: number;
+  errors: string[];
+  code: number;
+  text: string;
+}
+export type Node = {
+  NodeId: string;
+  BackendName: string,
   Ip: string;
+  Weight: number;
   Healthy: string;
+  Mngr: Mngr;
 }
 ///////////////////////////////////
 export class Nodes {
@@ -12,11 +28,13 @@ export class Nodes {
   topology: Node[];
   ///////////////////////////////////
   nodeIndex: number;
+  initTime: number;
   ///////////////////////////////////
   constructor() {
     this.nodeIndex = -1;
     this.committee = new Set<string>();
     this.topology = [];
+    this.initTime = 0;
   }
   ///////////////////////////////////
   async init(nodesUrl: string) {
@@ -24,6 +42,7 @@ export class Nodes {
     this.nodeIndex = -1;
     this.committee.clear();
     this.topology = [];
+    this.initTime = Date.now();
 
     let topology = [];
     try {
@@ -36,33 +55,45 @@ export class Nodes {
 
     // remove unhealthy nodes
     for (const node of topology) {
-      if (node.Healthy === "1") {
+      if (node.Healthy === '1') {
         this.topology.push(node);
       }
     }
     if (this.topology.length === 0)
       throw new Error(`no healthy nodes retrieved`);
   }
-  ///////////////////////////////////
-  getNextNode(committeeOnly: boolean = true) {
-    while (true) {
-      this.nodeIndex++;
-      // out of range
-      if (this.nodeIndex >= this.topology.length) this.nodeIndex = 0;
-      // if any node is welcome, or node is in committee- return
-      // if (!committeeOnly || this.committee.has(this.topology[this.nodeIndex].EthAddress))
-      return this.topology[this.nodeIndex];
+  getHealthyFor(protonet: ProtoNet): Node[] {
+    const res: Node[] = [];
+    for (const node of this.topology) {
+      // not stale (1 min)
+      if (this.initTime - node.Mngr.successTS < STALE_PERIOD &&
+        (node.Weight > 0) &&
+        (node.Mngr?.health[protonet])) {
+        res.push(node);
+      }
     }
+    return res;
   }
   ///////////////////////////////////
-  getRandomNode(committeeOnly: boolean = true) {
-    const index = Math.floor(Math.random() * this.topology.length);
-    // while (true) {
-    //   index++;
-    //   if (index >= this.topology.length) index = 0;
-    // if any node is welcome, or node is in committee- return
-    // if (!committeeOnly || this.committee.has(this.topology[index].EthAddress)) return this.topology[index];
-    return this.topology[index];
-    // }
-  }
+  // getNextNode(committeeOnly: boolean = true) {
+  //   while (true) {
+  //     this.nodeIndex++;
+  //     // out of range
+  //     if (this.nodeIndex >= this.topology.length) this.nodeIndex = 0;
+  //     // if any node is welcome, or node is in committee- return
+  //     // if (!committeeOnly || this.committee.has(this.topology[this.nodeIndex].EthAddress))
+  //     return this.topology[this.nodeIndex];
+  //   }
+  // }
+  ///////////////////////////////////
+  //   getRandomNode(committeeOnly: boolean = true) {
+  //     const index = Math.floor(Math.random() * this.topology.length);
+  //     // while (true) {
+  //     //   index++;
+  //     //   if (index >= this.topology.length) index = 0;
+  //     // if any node is welcome, or node is in committee- return
+  //     // if (!committeeOnly || this.committee.has(this.topology[index].EthAddress)) return this.topology[index];
+  //     return this.topology[index];
+  //     // }
+  //   }
 }

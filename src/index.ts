@@ -1,4 +1,4 @@
-import { Nodes } from "./nodes";
+import { Nodes, Node, ProtoNet } from "./nodes";
 
 export type EdgeProtocol = "toncenter-api-v2" | "ton-api-v4" | "adnl-proxy"; // default: toncenter-api-v2
 export type Network = "mainnet" | "testnet"; //| "sandbox"- is deprecated ; // default: mainnet
@@ -27,25 +27,65 @@ export class Access {
   }
   //////////////////////////////////
   async init() {
-    await this.nodes.init(`https://${this.host}/nodes`); // pass host when backend endpoint is ready
+    await this.nodes.init(`https://${this.host}/mngr/nodes`); // pass host when backend endpoint is ready
   }
+  //////////////////////////////////
+  makeProtonet(edgeProtocol: EdgeProtocol, network: Network): ProtoNet {
+    let res = '';
+    switch (edgeProtocol) {
+      case 'toncenter-api-v2':
+        res += 'v2-';
+        break;
+      case 'ton-api-v4':
+        res += 'v4-';
+        break;
+    }
+    res += network;
+    return res as ProtoNet;
+  }
+  //////////////////////////////////
+  weightedRandom(nodes: Node[]): Node | undefined {
+    let sumWeights = 0;
+    for (const node of nodes) {
+      sumWeights += node.Weight;
+    }
+    const rnd = Math.floor(Math.random() * sumWeights);
+
+    let cur = 0;
+    for (const node of nodes) {
+      if (rnd > cur && rnd < cur + node.Weight)
+        return node;
+      cur += node.Weight;
+    }
+  }
+
   //////////////////////////////////
   buildUrls(
     network?: Network,
     edgeProtocol?: EdgeProtocol,
-    suffix?: string
+    suffix?: string,
+    single?: boolean
   ): string[] {
     // default params
     if (!suffix) suffix = "";
+    if (!edgeProtocol) edgeProtocol = "toncenter-api-v2";
+    if (!network) network = "mainnet";
 
     // remove leading slash
     if (suffix.length) suffix = suffix.replace(/^\/+/, "");
 
     const res: string[] = [];
-    const len = this.nodes.topology.length;
-    for (let i = 0; i < len; ++i) {
-      const node = this.nodes.getNextNode();
-      const url = `https://${this.host}/${node.Name}/${this.urlVersion}/${network}/${edgeProtocol}/${suffix}`;
+    let healthyNodes = this.nodes.getHealthyFor(this.makeProtonet(edgeProtocol, network));
+
+    // if count < healthNodes length - weighted random
+    if (single) {
+      const chosen = this.weightedRandom(healthyNodes);
+      if (chosen)
+        healthyNodes = [chosen];
+    }
+
+    for (const node of healthyNodes) {
+      const url = `https://${this.host}/${node.NodeId}/${this.urlVersion}/${network}/${edgeProtocol}/${suffix}`;
       res.push(url);
     }
     return res;
@@ -57,11 +97,12 @@ export class Access {
 async function getEndpoints(
   network?: Network,
   edgeProtocol?: EdgeProtocol,
-  suffix?: string
+  suffix?: string,
+  single?: boolean
 ): Promise<string[]> {
   const access = new Access();
   await access.init();
-  const res = access.buildUrls(network, edgeProtocol, suffix);
+  const res = access.buildUrls(network, edgeProtocol, suffix, single);
   return res;
 }
 
@@ -69,7 +110,7 @@ async function getEndpoints(
 // global exported explicit functions
 
 // toncenter multi
-export async function getHttpEndpoints(config?: Config): Promise<string[]> {
+export async function getHttpEndpoints(config?: Config, single?: boolean): Promise<string[]> {
   // default params
   const network = config?.network ? config.network : "mainnet";
   let suffix = "jsonRPC";
@@ -77,17 +118,17 @@ export async function getHttpEndpoints(config?: Config): Promise<string[]> {
     suffix = "";
   }
 
-  return await getEndpoints(network, "toncenter-api-v2", suffix);
+  return await getEndpoints(network, "toncenter-api-v2", suffix, single);
 }
 // toncenter single
 export async function getHttpEndpoint(config?: Config): Promise<string> {
-  const endpoints = await getHttpEndpoints(config);
-  const index = Math.floor(Math.random() * endpoints.length);
-  return endpoints[index];
+  // waited random a single endpoint
+  const endpoints = await getHttpEndpoints(config, true);
+  return endpoints[0];
 }
 
 // // API V4 - multi
-export async function getHttpV4Endpoints(config?: Config): Promise<string[]> {
+export async function getHttpV4Endpoints(config?: Config, single?: boolean): Promise<string[]> {
   // default params
   const network = config?.network ? config.network : "mainnet";
 
@@ -100,13 +141,12 @@ export async function getHttpV4Endpoints(config?: Config): Promise<string[]> {
   const suffix = ""; // this is like rest - default
 
   // other networks than mainnet are not supported
-  return await getEndpoints(network, "ton-api-v4", suffix);
+  return await getEndpoints(network, "ton-api-v4", suffix, single);
 }
 // API V4 - single
 export async function getHttpV4Endpoint(config?: Config): Promise<string> {
-  const endpoints = await getHttpV4Endpoints(config);
-  const index = Math.floor(Math.random() * endpoints.length);
-  return endpoints[index];
+  const endpoints = await getHttpV4Endpoints(config, true);
+  return endpoints[0];
 }
 
 // // WS ADNL PROXY
@@ -125,12 +165,7 @@ export async function getHttpV4Endpoint(config?: Config): Promise<string> {
 
 // import { initLiteClient } from "./debug";
 // async function dbg() {
-//   const lc = await initLiteClient();
-//   try {
-//     const info = await lc?.getMasterchainInfo();
-//     console.log(info);
-//   } catch (e) {
-//     console.error(e);
-//   }
+//   const eps = await getHttpEndpoint();
+//   console.log(eps);
 // }
 // dbg();

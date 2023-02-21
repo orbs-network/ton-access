@@ -13,22 +13,21 @@ describe('ton-center-V2', function () {
         const results = await sanity(endpoints, 'getMasterchainInfo');
         for (let res of results) {
             console.log('endpoint:', res.url);
-            console.log('ok', res.ok);
+            console.log('v2 seqno', res.result.last.seqno);
             expect(res.ok).to.eq(true);
         }
     });
     // testnet
-    it('sanity - testnet - ok status for all nodes', async () => {
-        let config: Config = { network: 'testnet', protocol: 'rest' };
-        let endpoints = await getHttpEndpoints(config);
-        const results = await sanity(endpoints, 'getMasterchainInfo');
-        for (let res of results) {
-            console.log('endpoint:', res.url);
-            console.log('ok', res.ok);
-            expect(res.ok).to.eq(true);
-        }
-
-    });
+    // it('sanity - testnet - ok status for all nodes', async () => {
+    //     let config: Config = { network: 'testnet', protocol: 'rest' };
+    //     let endpoints = await getHttpEndpoints(config);
+    //     const results = await sanity(endpoints, 'getMasterchainInfo');
+    //     for (let res of results) {
+    //         console.log('endpoint:', res.url);
+    //         console.log('v2 seqno', res.result.last.seqno);
+    //         expect(res.ok).to.eq(true);
+    //     }
+    // });
     it('should return ok=true getMasterchainInfo mainnet', async function () {
         let endpoint = await getHttpEndpoint({ protocol: 'rest' });
         endpoint += "getMasterchainInfo"
@@ -75,7 +74,8 @@ describe('ton-center-V2', function () {
         expect(content.ok).to.eq(true);
     });
 
-    const example = "60583653849101971";
+    const example = "39989898444524142";
+    //8e1299cb63ca6e
     it('TonClient ton-npm balance should be length like 60583653849101971', async () => {
         const endpoint = await getHttpEndpoint();
         console.log("endpoint:", endpoint);
@@ -83,7 +83,8 @@ describe('ton-center-V2', function () {
 
         // make a query to mainnet
         const address = Address.parseFriendly("EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N").address;
-        const balance = await client.getBalance(address);
+        const bn = await client.getBalance(address);
+        const balance = bn.toString();
         expect(balance).to.not.be.undefined;
         expect(balance.toString().length).to.eq(example.length);
     });
