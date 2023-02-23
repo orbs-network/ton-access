@@ -27,7 +27,8 @@ export class Access {
   }
   //////////////////////////////////
   async init() {
-    await this.nodes.init(`https://${this.host}/mngr/nodes`); // pass host when backend endpoint is ready
+    const pjson = require('../package.json');
+    await this.nodes.init(`https://${this.host}/mngr/nodes?npm_version=${pjson.version}`); // pass host when backend endpoint is ready
   }
   //////////////////////////////////
   makeProtonet(edgeProtocol: EdgeProtocol, network: Network): ProtoNet {
@@ -188,12 +189,3 @@ export async function getHttpV4Endpoint(config?: Config): Promise<string> {
 //     counter[res] += 1;
 //   }
 // }
-// async function dbg() {
-//   let config: Config = { network: 'mainnet' };
-//   let endpoints = await getHttpV4Endpoints(config);
-//   console.log(endpoints);
-//   let endpoint = await getHttpV4Endpoint(config);
-//   console.log(endpoint);
-// }
-
-// dbg();

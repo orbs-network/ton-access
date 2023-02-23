@@ -596,6 +596,72 @@
     }
   });
 
+  // package.json
+  var require_package = __commonJS({
+    "package.json"(exports, module) {
+      module.exports = {
+        name: "@orbs-network/ton-access",
+        version: "2.2.2",
+        description: "Unthrottled anonymous RPC access to TON blockchain via a robust decentralized network",
+        source: "lib/index.js",
+        main: "lib/index.js",
+        types: "lib/index.d.ts",
+        files: [
+          "lib/**/*"
+        ],
+        scripts: {
+          test: "env mocha -r ts-node/register test/**/*.ts",
+          "test:v2": "env mocha -r ts-node/register test/ton-v2.ts",
+          "test:v4": "env mocha -r ts-node/register test/ton-v4.ts",
+          cleanup: "rimraf ./lib",
+          "build:web:reg": "esbuild ./lib/web.js --bundle  --sourcemap --target=es2015 --outfile=./dist/index.js",
+          "build:web:min": "esbuild ./lib/web.js --bundle  --minify    --target=es2015 --outfile=./dist/index.min.js",
+          "build:web": "rimraf ./dist && npm run build:web:reg && npm run build:web:min",
+          build: "npm run lint && rimraf ./lib && tsc && npm run build:web",
+          format: 'prettier --write "src/**/*.ts"',
+          lint: "tslint -p tsconfig.json",
+          prepare: "npm run build",
+          prepublishOnly: "npm test && npm run lint",
+          preversion: "npm run lint",
+          version: "npm run format && git add -A src",
+          postversion: "git push && git push --tags"
+        },
+        repository: {
+          type: "git",
+          url: "git+https://github.com/orbs-network/ton-access.git"
+        },
+        author: "yuval@orbs.com",
+        license: "MIT",
+        bugs: {
+          url: "https://github.com/orbs-network/ton-access/issues"
+        },
+        homepage: "https://github.com/orbs-network/ton-access#readme",
+        dependencies: {
+          "isomorphic-fetch": "^3.0.0"
+        },
+        devDependencies: {
+          "@types/bn.js": "^5.1.1",
+          "@types/chai": "^4.3.4",
+          "@types/isomorphic-fetch": "^0.0.36",
+          "@types/mocha": "^10.0.0",
+          buffer: "^6.0.3",
+          chai: "^4.3.7",
+          esbuild: "^0.15.14",
+          mocha: "^10.1.0",
+          prettier: "^2.7.1",
+          rimraf: "^3.0.2",
+          ton: "^12.1.3",
+          "ton-lite-client": "npm:@truecarry/ton-lite-client@^1.6.1",
+          tonweb: "^0.0.58",
+          "ts-node": "^10.9.1",
+          tslib: "^2.4.0",
+          tslint: "^6.1.3",
+          "tslint-config-prettier": "^1.18.0"
+        }
+      };
+    }
+  });
+
   // lib/index.js
   var require_lib = __commonJS({
     "lib/index.js"(exports) {
@@ -638,7 +704,8 @@
         }
         init() {
           return __awaiter(this, void 0, void 0, function* () {
-            yield this.nodes.init(`https://${this.host}/mngr/nodes`);
+            const pjson = require_package();
+            yield this.nodes.init(`https://${this.host}/mngr/nodes?npm_version=${pjson.version}`);
           });
         }
         makeProtonet(edgeProtocol, network) {
