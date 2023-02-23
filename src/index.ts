@@ -53,7 +53,7 @@ export class Access {
 
     let cur = 0;
     for (const node of nodes) {
-      if (rnd > cur && rnd < cur + node.Weight)
+      if (rnd >= cur && rnd < cur + node.Weight)
         return node;
       cur += node.Weight;
     }
@@ -76,12 +76,16 @@ export class Access {
 
     const res: string[] = [];
     let healthyNodes = this.nodes.getHealthyFor(this.makeProtonet(edgeProtocol, network));
+    if (!healthyNodes?.length)
+      throw new Error('no healthy nodes');
 
     // if count < healthNodes length - weighted random
-    if (single) {
+    if (single && healthyNodes.length) {
       const chosen = this.weightedRandom(healthyNodes);
       if (chosen)
         healthyNodes = [chosen];
+      else
+        throw new Error('weightedRandom return empty');
     }
 
     for (const node of healthyNodes) {
@@ -165,7 +169,19 @@ export async function getHttpV4Endpoint(config?: Config): Promise<string> {
 
 // import { initLiteClient } from "./debug";
 // async function dbg() {
-//   const eps = await getHttpEndpoint();
-//   console.log(eps);
+//   // const eps = await getHttpEndpoint();
+//   // console.log(eps);
+//   const SUM = 100;
+//   const config: Config = {
+//     network: 'mainnet'
+//   }
+//   const counter: any = {};
+//   for (let i = 0; i < SUM; ++i) {
+//     const res = await getHttpEndpoint(config);
+//     if (!counter[res])
+//       counter[res] = 0;
+
+//     counter[res] += 1;
+//   }
 // }
 // dbg();
