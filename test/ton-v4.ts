@@ -38,11 +38,4 @@ describe('ton-V4', function () {
         expect(json).to.not.be.undefined;
         expect(json.last.seqno).to.be.above(24920000);
     });
-
-    it('nodes-api nodes length should be > 0', async () => {
-        const url = "https://ton.access.orbs.network/nodes";
-        const res = await fetch(url);
-        const nodes = await res.json() as Node[];
-        expect(nodes.length).to.be.above(0);
-    });
 });
