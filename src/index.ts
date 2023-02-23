@@ -89,7 +89,11 @@ export class Access {
     }
 
     for (const node of healthyNodes) {
-      const url = `https://${this.host}/${node.NodeId}/${this.urlVersion}/${network}/${edgeProtocol}/${suffix}`;
+      let url = `https://${this.host}/${node.NodeId}/${this.urlVersion}/${network}/${edgeProtocol}`;
+      // append /suffix only if needed
+      if (suffix.length)
+        url += `/${suffix}`
+
       res.push(url);
     }
     return res;
@@ -184,4 +188,12 @@ export async function getHttpV4Endpoint(config?: Config): Promise<string> {
 //     counter[res] += 1;
 //   }
 // }
+// async function dbg() {
+//   let config: Config = { network: 'mainnet' };
+//   let endpoints = await getHttpV4Endpoints(config);
+//   console.log(endpoints);
+//   let endpoint = await getHttpV4Endpoint(config);
+//   console.log(endpoint);
+// }
+
 // dbg();

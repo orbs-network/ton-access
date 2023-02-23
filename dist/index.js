@@ -688,7 +688,9 @@
               throw new Error("weightedRandom return empty");
           }
           for (const node of healthyNodes) {
-            const url = `https://${this.host}/${node.NodeId}/${this.urlVersion}/${network}/${edgeProtocol}/${suffix}`;
+            let url = `https://${this.host}/${node.NodeId}/${this.urlVersion}/${network}/${edgeProtocol}`;
+            if (suffix.length)
+              url += `/${suffix}`;
             res.push(url);
           }
           return res;

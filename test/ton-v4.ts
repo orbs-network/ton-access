@@ -8,7 +8,7 @@ describe('ton-V4', function () {
     it('sanity - mainnet - ok status for all nodes', async () => {
         let config: Config = { network: 'mainnet' };
         let endpoints = await getHttpV4Endpoints(config);
-        const results = await sanity(endpoints, 'block/latest');
+        const results = await sanity(endpoints, '/block/latest');
         for (let res of results) {
             console.log('endpoint:', res.url);
             console.log('seqno', res.last.seqno);
@@ -19,7 +19,7 @@ describe('ton-V4', function () {
     it('sanity - testnet - ok status for all nodes', async () => {
         let config: Config = { network: 'testnet' };
         let endpoints = await getHttpV4Endpoints(config);
-        const results = await sanity(endpoints, 'block/latest');
+        const results = await sanity(endpoints, '/block/latest');
         for (let res of results) {
             console.log('endpoint:', res.url);
             console.log('seqno', res.last.seqno);
@@ -29,7 +29,7 @@ describe('ton-V4', function () {
     ///block/latest
     it('explicit suffix latest block', async () => {
         let endpoint = await getHttpV4Endpoint();
-        endpoint += 'block/latest'
+        endpoint += '/block/latest'
         console.log("endpoint:", endpoint)
 
         const last = await fetch(endpoint);
