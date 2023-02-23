@@ -550,17 +550,20 @@
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Nodes = void 0;
       require_fetch_npm_browserify();
+      var STALE_PERIOD = 2 * 60 * 1e3;
       var Nodes = class {
         constructor() {
           this.nodeIndex = -1;
           this.committee = /* @__PURE__ */ new Set();
           this.topology = [];
+          this.initTime = 0;
         }
         init(nodesUrl) {
           return __awaiter(this, void 0, void 0, function* () {
             this.nodeIndex = -1;
             this.committee.clear();
             this.topology = [];
+            this.initTime = Date.now();
             let topology = [];
             try {
               const response = yield fetch(nodesUrl);
@@ -578,17 +581,15 @@
               throw new Error(`no healthy nodes retrieved`);
           });
         }
-        getNextNode(committeeOnly = true) {
-          while (true) {
-            this.nodeIndex++;
-            if (this.nodeIndex >= this.topology.length)
-              this.nodeIndex = 0;
-            return this.topology[this.nodeIndex];
+        getHealthyFor(protonet) {
+          var _a;
+          const res = [];
+          for (const node of this.topology) {
+            if (this.initTime - node.Mngr.successTS < STALE_PERIOD && node.Weight > 0 && ((_a = node.Mngr) === null || _a === void 0 ? void 0 : _a.health[protonet])) {
+              res.push(node);
+            }
           }
-        }
-        getRandomNode(committeeOnly = true) {
-          const index = Math.floor(Math.random() * this.topology.length);
-          return this.topology[index];
+          return res;
         }
       };
       exports.Nodes = Nodes;
@@ -637,68 +638,104 @@
         }
         init() {
           return __awaiter(this, void 0, void 0, function* () {
-            yield this.nodes.init(`https://${this.host}/nodes`);
+            yield this.nodes.init(`https://${this.host}/mngr/nodes`);
           });
         }
-        buildUrls(network, edgeProtocol, suffix) {
+        makeProtonet(edgeProtocol, network) {
+          let res = "";
+          switch (edgeProtocol) {
+            case "toncenter-api-v2":
+              res += "v2-";
+              break;
+            case "ton-api-v4":
+              res += "v4-";
+              break;
+          }
+          res += network;
+          return res;
+        }
+        weightedRandom(nodes) {
+          let sumWeights = 0;
+          for (const node of nodes) {
+            sumWeights += node.Weight;
+          }
+          const rnd = Math.floor(Math.random() * sumWeights);
+          let cur = 0;
+          for (const node of nodes) {
+            if (rnd >= cur && rnd < cur + node.Weight)
+              return node;
+            cur += node.Weight;
+          }
+        }
+        buildUrls(network, edgeProtocol, suffix, single) {
           if (!suffix)
             suffix = "";
+          if (!edgeProtocol)
+            edgeProtocol = "toncenter-api-v2";
+          if (!network)
+            network = "mainnet";
           if (suffix.length)
             suffix = suffix.replace(/^\/+/, "");
           const res = [];
-          const len = this.nodes.topology.length;
-          for (let i = 0; i < len; ++i) {
-            const node = this.nodes.getNextNode();
-            const url = `https://${this.host}/${node.Name}/${this.urlVersion}/${network}/${edgeProtocol}/${suffix}`;
+          let healthyNodes = this.nodes.getHealthyFor(this.makeProtonet(edgeProtocol, network));
+          if (!(healthyNodes === null || healthyNodes === void 0 ? void 0 : healthyNodes.length))
+            throw new Error("no healthy nodes");
+          if (single && healthyNodes.length) {
+            const chosen = this.weightedRandom(healthyNodes);
+            if (chosen)
+              healthyNodes = [chosen];
+            else
+              throw new Error("weightedRandom return empty");
+          }
+          for (const node of healthyNodes) {
+            const url = `https://${this.host}/${node.NodeId}/${this.urlVersion}/${network}/${edgeProtocol}/${suffix}`;
             res.push(url);
           }
           return res;
         }
       };
       exports.Access = Access;
-      function getEndpoints(network, edgeProtocol, suffix) {
+      function getEndpoints(network, edgeProtocol, suffix, single) {
         return __awaiter(this, void 0, void 0, function* () {
           const access = new Access();
           yield access.init();
-          const res = access.buildUrls(network, edgeProtocol, suffix);
+          const res = access.buildUrls(network, edgeProtocol, suffix, single);
           return res;
         });
       }
-      function getHttpEndpoints(config) {
+      function getHttpEndpoints(config, single) {
         return __awaiter(this, void 0, void 0, function* () {
           const network = (config === null || config === void 0 ? void 0 : config.network) ? config.network : "mainnet";
           let suffix = "jsonRPC";
           if ((config === null || config === void 0 ? void 0 : config.protocol) === "rest") {
             suffix = "";
           }
-          return yield getEndpoints(network, "toncenter-api-v2", suffix);
+          return yield getEndpoints(network, "toncenter-api-v2", suffix, single);
         });
       }
       exports.getHttpEndpoints = getHttpEndpoints;
       function getHttpEndpoint(config) {
         return __awaiter(this, void 0, void 0, function* () {
-          const endpoints = yield getHttpEndpoints(config);
-          const index = Math.floor(Math.random() * endpoints.length);
-          return endpoints[index];
+          const endpoints = yield getHttpEndpoints(config, true);
+          return endpoints[0];
         });
       }
       exports.getHttpEndpoint = getHttpEndpoint;
-      function getHttpV4Endpoints(config) {
+      function getHttpV4Endpoints(config, single) {
         return __awaiter(this, void 0, void 0, function* () {
           const network = (config === null || config === void 0 ? void 0 : config.network) ? config.network : "mainnet";
           if ((config === null || config === void 0 ? void 0 : config.protocol) === "json-rpc") {
             throw Error("config.protocol json-rpc is not supported for getTonApiV4Endpoints");
           }
           const suffix = "";
-          return yield getEndpoints(network, "ton-api-v4", suffix);
+          return yield getEndpoints(network, "ton-api-v4", suffix, single);
         });
       }
       exports.getHttpV4Endpoints = getHttpV4Endpoints;
       function getHttpV4Endpoint(config) {
         return __awaiter(this, void 0, void 0, function* () {
-          const endpoints = yield getHttpV4Endpoints(config);
-          const index = Math.floor(Math.random() * endpoints.length);
-          return endpoints[index];
+          const endpoints = yield getHttpV4Endpoints(config, true);
+          return endpoints[0];
         });
       }
       exports.getHttpV4Endpoint = getHttpV4Endpoint;
