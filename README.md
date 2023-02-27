@@ -179,3 +179,33 @@ interface Config {
 4. **Decentralized access to the chain**
 
     By relying on https://toncenter.com/api/v2/jsonRPC, you're relying on a centralized business (toncenter.com), not a protocol. The Orbs Network TON-Access is a decentralized protocol operated by dozens of [independent nodes](https://status.orbs.network) that are all part of the [Orbs Network](https://github.com/orbs-network). The network mainnet is running since 2019 and validators are staked with Proof-of-Stake consensus with over $100 million TVL locked. The network is extremely robust against downtime due to the number of independent nodes.
+
+## Version Changes
+>> v2.3.0
+
+* As of this version, the client calls ```edge/mngr/nodes``` instead of ```edge/nodes```
+* The resulr comes as an array of nodes in this format
+```js
+{
+  "NodeId": "19e116699fd6c7ad754a912af633aafec27cc456",
+  "BackendName": "be2",
+  "Ip": "3.142.212.29",
+  "Weight": 100,
+  "Healthy": "1",
+  "Mngr": {
+  "updated": "Mon, 27 Feb 2023 13:31:16 GMT",
+  "health": {
+    "v2-mainnet": true,
+    "v2-testnet": true,
+    "v4-mainnet": true,
+    "v4-testnet": true
+  },
+  "successTS": 1677504676523,
+  "errors": [],
+  "code": 200,
+  "text": "OK"
+  }
+},
+```
+* This way the client is aware of which nodes support which protocol-network and can chose a random node in a more responsible way. 
+* Weight field is also taken into consideration during the random node choice.
