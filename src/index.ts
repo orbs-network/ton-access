@@ -27,18 +27,20 @@ export class Access {
   }
   //////////////////////////////////
   async init() {
-    const pjson = require('../package.json');
-    await this.nodes.init(`https://${this.host}/mngr/nodes?npm_version=${pjson.version}`); // pass host when backend endpoint is ready
+    const pjson = require("../package.json");
+    await this.nodes.init(
+      `https://${this.host}/mngr/nodes?npm_version=${pjson.version}`
+    ); // pass host when backend endpoint is ready
   }
   //////////////////////////////////
   makeProtonet(edgeProtocol: EdgeProtocol, network: Network): ProtoNet {
-    let res = '';
+    let res = "";
     switch (edgeProtocol) {
-      case 'toncenter-api-v2':
-        res += 'v2-';
+      case "toncenter-api-v2":
+        res += "v2-";
         break;
-      case 'ton-api-v4':
-        res += 'v4-';
+      case "ton-api-v4":
+        res += "v4-";
         break;
     }
     res += network;
@@ -54,8 +56,7 @@ export class Access {
 
     let cur = 0;
     for (const node of nodes) {
-      if (rnd >= cur && rnd < cur + node.Weight)
-        return node;
+      if (rnd >= cur && rnd < cur + node.Weight) return node;
       cur += node.Weight;
     }
   }
@@ -76,7 +77,7 @@ export class Access {
     if (suffix.length) suffix = suffix.replace(/^\/+/, "");
 
     const res: string[] = [];
-    const protonet = this.makeProtonet(edgeProtocol, network)
+    const protonet = this.makeProtonet(edgeProtocol, network);
     let healthyNodes = this.nodes.getHealthyFor(protonet);
     if (!healthyNodes?.length)
       throw new Error(`no healthy nodes for ${protonet}`);
@@ -84,17 +85,14 @@ export class Access {
     // if count < healthNodes length - weighted random
     if (single && healthyNodes.length) {
       const chosen = this.weightedRandom(healthyNodes);
-      if (chosen)
-        healthyNodes = [chosen];
-      else
-        throw new Error('weightedRandom return empty');
+      if (chosen) healthyNodes = [chosen];
+      else throw new Error("weightedRandom return empty");
     }
 
     for (const node of healthyNodes) {
       let url = `https://${this.host}/${node.NodeId}/${this.urlVersion}/${network}/${edgeProtocol}`;
       // append /suffix only if needed
-      if (suffix.length)
-        url += `/${suffix}`
+      if (suffix.length) url += `/${suffix}`;
 
       res.push(url);
     }
@@ -120,7 +118,10 @@ async function getEndpoints(
 // global exported explicit functions
 
 // toncenter multi
-export async function getHttpEndpoints(config?: Config, single?: boolean): Promise<string[]> {
+export async function getHttpEndpoints(
+  config?: Config,
+  single?: boolean
+): Promise<string[]> {
   // default params
   const network = config?.network ? config.network : "mainnet";
   let suffix = "jsonRPC";
@@ -138,7 +139,10 @@ export async function getHttpEndpoint(config?: Config): Promise<string> {
 }
 
 // // API V4 - multi
-export async function getHttpV4Endpoints(config?: Config, single?: boolean): Promise<string[]> {
+export async function getHttpV4Endpoints(
+  config?: Config,
+  single?: boolean
+): Promise<string[]> {
   // default params
   const network = config?.network ? config.network : "mainnet";
 

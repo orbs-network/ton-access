@@ -1,9 +1,12 @@
 import "isomorphic-fetch";
 
-export type ProtoNet = "v2-mainnet" | "v2-testnet" | "v4-mainnet" | "v4-testnet";
+export type ProtoNet =
+  | "v2-mainnet"
+  | "v2-testnet"
+  | "v4-mainnet"
+  | "v4-testnet";
 
 const STALE_PERIOD = 2 * 60 * 1000; // 2 Min
-
 
 interface Mngr {
   updated: string;
@@ -15,12 +18,12 @@ interface Mngr {
 }
 export type Node = {
   NodeId: string;
-  BackendName: string,
+  BackendName: string;
   Ip: string;
   Weight: number;
   Healthy: string;
   Mngr: Mngr;
-}
+};
 ///////////////////////////////////
 export class Nodes {
   ///////////////////////////////////
@@ -55,7 +58,7 @@ export class Nodes {
 
     // remove unhealthy nodes
     for (const node of topology) {
-      if (node.Healthy === '1') {
+      if (node.Healthy === "1") {
         this.topology.push(node);
       }
     }
@@ -66,9 +69,11 @@ export class Nodes {
     const res: Node[] = [];
     for (const node of this.topology) {
       // not stale (1 min)
-      if (this.initTime - node.Mngr.successTS < STALE_PERIOD &&
-        (node.Weight > 0) &&
-        (node.Mngr?.health[protonet])) {
+      if (
+        this.initTime - node.Mngr.successTS < STALE_PERIOD &&
+        node.Weight > 0 &&
+        node.Mngr?.health[protonet]
+      ) {
         res.push(node);
       }
     }

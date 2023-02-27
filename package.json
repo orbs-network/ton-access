@@ -1,6 +1,6 @@
 {
   "name": "@orbs-network/ton-access",
-  "version": "2.2.2",
+  "version": "2.3.0",
   "description": "Unthrottled anonymous RPC access to TON blockchain via a robust decentralized network",
   "source": "lib/index.js",
   "main": "lib/index.js",
