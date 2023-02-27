@@ -76,9 +76,10 @@ export class Access {
     if (suffix.length) suffix = suffix.replace(/^\/+/, "");
 
     const res: string[] = [];
-    let healthyNodes = this.nodes.getHealthyFor(this.makeProtonet(edgeProtocol, network));
+    const protonet = this.makeProtonet(edgeProtocol, network)
+    let healthyNodes = this.nodes.getHealthyFor(protonet);
     if (!healthyNodes?.length)
-      throw new Error('no healthy nodes');
+      throw new Error(`no healthy nodes for ${protonet}`);
 
     // if count < healthNodes length - weighted random
     if (single && healthyNodes.length) {

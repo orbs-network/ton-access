@@ -744,9 +744,10 @@
           if (suffix.length)
             suffix = suffix.replace(/^\/+/, "");
           const res = [];
-          let healthyNodes = this.nodes.getHealthyFor(this.makeProtonet(edgeProtocol, network));
+          const protonet = this.makeProtonet(edgeProtocol, network);
+          let healthyNodes = this.nodes.getHealthyFor(protonet);
           if (!(healthyNodes === null || healthyNodes === void 0 ? void 0 : healthyNodes.length))
-            throw new Error("no healthy nodes");
+            throw new Error(`no healthy nodes for ${protonet}`);
           if (single && healthyNodes.length) {
             const chosen = this.weightedRandom(healthyNodes);
             if (chosen)
