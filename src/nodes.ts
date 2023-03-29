@@ -67,18 +67,13 @@ export class Nodes {
   }
   getHealthyFor(protonet: ProtoNet): Node[] {
     const res: Node[] = [];
-    let staleCount = 0
+    let staleCount = 0;
     for (const node of this.topology) {
       // not stale (10 min)
       const stale = this.initTime - node.Mngr.successTS > STALE_PERIOD;
-      if (
-        !stale &&
-        node.Weight > 0 &&
-        node.Mngr?.health[protonet]
-      ) {
+      if (!stale && node.Weight > 0 && node.Mngr?.health[protonet]) {
         res.push(node);
-      }
-      else if (stale) {
+      } else if (stale) {
         staleCount++;
       }
     }
