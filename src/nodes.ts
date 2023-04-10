@@ -67,7 +67,7 @@ export class Nodes {
     const res: Node[] = [];
 
     for (const node of this.topology) {
-      // not stale (10 min)
+      // healthy and has weight
       if (node.Weight > 0 && node.Mngr?.health[protonet]) {
         res.push(node);
       }
