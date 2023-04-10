@@ -550,7 +550,6 @@
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Nodes = void 0;
       require_fetch_npm_browserify();
-      var STALE_PERIOD = 10 * 60 * 1e3;
       var Nodes = class {
         constructor() {
           this.nodeIndex = -1;
@@ -578,23 +577,16 @@
               }
             }
             if (this.topology.length === 0)
-              throw new Error(`no healthy nodes retrieved`);
+              throw new Error(`no healthy nodes in ${nodesUrl}`);
           });
         }
         getHealthyFor(protonet) {
           var _a;
           const res = [];
-          let staleCount = 0;
           for (const node of this.topology) {
-            const stale = this.initTime - node.Mngr.successTS > STALE_PERIOD;
-            if (!stale && node.Weight > 0 && ((_a = node.Mngr) === null || _a === void 0 ? void 0 : _a.health[protonet])) {
+            if (node.Weight > 0 && ((_a = node.Mngr) === null || _a === void 0 ? void 0 : _a.health[protonet])) {
               res.push(node);
-            } else if (stale) {
-              staleCount++;
             }
-          }
-          if (staleCount === this.topology.length) {
-            throw new Error(`all nodes manager's data are stale`);
           }
           return res;
         }
@@ -608,7 +600,7 @@
     "package.json"(exports, module) {
       module.exports = {
         name: "@orbs-network/ton-access",
-        version: "2.3.0",
+        version: "2.3.1",
         description: "Unthrottled anonymous RPC access to TON blockchain via a robust decentralized network",
         source: "lib/index.js",
         main: "lib/index.js",
@@ -753,7 +745,7 @@
           const res = [];
           const protonet = this.makeProtonet(edgeProtocol, network);
           let healthyNodes = this.nodes.getHealthyFor(protonet);
-          if (!healthyNodes.length)
+          if (!(healthyNodes === null || healthyNodes === void 0 ? void 0 : healthyNodes.length))
             throw new Error(`no healthy nodes for ${protonet}`);
           if (single && healthyNodes.length) {
             const chosen = this.weightedRandom(healthyNodes);
