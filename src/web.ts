@@ -1,4 +1,4 @@
-import { Access, getHttpEndpoint, getHttpV4Endpoint } from "./index";
+import { Access, getHttpEndpoint, getHttpV4Endpoint, getWsV4Endpoint } from "./index";
 declare global {
   interface Window {
     TonAccess: object;
@@ -11,4 +11,5 @@ window.TonAccess = {
   },
   getHttpEndpoint,
   getHttpV4Endpoint,
+  getWsV4Endpoint,
 };
