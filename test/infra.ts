@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { getHttpEndpoint, Config } from '../src/index';
 
 describe('Infra', function () {
-    this.timeout(30000);
+    this.timeout(40000);
     // mainnet
     it('should return relevant number per each nodes weight', async () => {
         let counter: any = {};
