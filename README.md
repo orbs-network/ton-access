@@ -61,7 +61,7 @@ const balance = await tonweb.getBalance("EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bp
 <script src="https://cdn.jsdelivr.net/gh/toncenter/tonweb/dist/tonweb.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        TonAccess.getHttpEndpoint().then((endpoint) => { // get the decentralized RPC endpoint
+        TonGateway.getHttpEndpoint().then((endpoint) => { // get the decentralized RPC endpoint
             const tonweb = new TonWeb(new TonWeb.HttpProvider(endpoint)); // initialize tonweb library
             // make some query to mainnet
             tonweb.getBalance("EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N").then((balance) => {
