@@ -2,19 +2,21 @@ import { Nodes, Node, ProtoNet } from "./nodes";
 
 export type EdgeProtocol = "toncenter-api-v2" | "ton-api-v4" | "adnl-proxy"; // default: toncenter-api-v2
 export type Network = "mainnet" | "testnet"; //| "sandbox"- is deprecated ; // default: mainnet
+export type Scheme = "https" | "wss";
 export interface Config {
   host?: string; // default: "ton.access.orbs.network"
   accessVersion?: number; // default: 1
   network?: Network;
   protocol?: "default" | "json-rpc" | "rest"; // default: "default"
+  scheme?: Scheme; // default http
 }
 export class Access {
   //////////////////////////////////
   // config: Config;
   nodes: Nodes;
   host: string;
-  //config: Config;
   urlVersion: number;
+  package: any;
 
   //////////////////////////////////
   constructor() {
@@ -24,12 +26,13 @@ export class Access {
     this.urlVersion = 1;
 
     this.nodes = new Nodes();
+    this.package = require("../package.json");
   }
   //////////////////////////////////
   async init() {
-    const pjson = require("../package.json");
+
     await this.nodes.init(
-      `https://${this.host}/mngr/nodes?npm_version=${pjson.version}`
+      `https://${this.host}/mngr/nodes?npm_version=${this.package.version}`
     ); // pass host when backend endpoint is ready
   }
   //////////////////////////////////
@@ -63,6 +66,7 @@ export class Access {
 
   //////////////////////////////////
   buildUrls(
+    scheme?: Scheme,
     network?: Network,
     edgeProtocol?: EdgeProtocol,
     suffix?: string,
@@ -72,6 +76,7 @@ export class Access {
     if (!suffix) suffix = "";
     if (!edgeProtocol) edgeProtocol = "toncenter-api-v2";
     if (!network) network = "mainnet";
+
 
     // remove leading slash
     if (suffix.length) suffix = suffix.replace(/^\/+/, "");
@@ -90,7 +95,7 @@ export class Access {
     }
 
     for (const node of healthyNodes) {
-      let url = `https://${this.host}/${node.NodeId}/${this.urlVersion}/${network}/${edgeProtocol}`;
+      let url = `${scheme}://${this.host}/${node.NodeId}/${this.urlVersion}/${network}/${edgeProtocol}`;
       // append /suffix only if needed
       if (suffix.length) url += `/${suffix}`;
 
@@ -103,6 +108,7 @@ export class Access {
 //////////////////////////////
 // private get multi endpoints
 async function getEndpoints(
+  scheme?: Scheme,
   network?: Network,
   edgeProtocol?: EdgeProtocol,
   suffix?: string,
@@ -110,7 +116,7 @@ async function getEndpoints(
 ): Promise<string[]> {
   const access = new Access();
   await access.init();
-  const res = access.buildUrls(network, edgeProtocol, suffix, single);
+  const res = access.buildUrls(scheme, network, edgeProtocol, suffix, single);
   return res;
 }
 
@@ -124,12 +130,14 @@ export async function getHttpEndpoints(
 ): Promise<string[]> {
   // default params
   const network = config?.network ? config.network : "mainnet";
+  const scheme = config?.scheme ? config.scheme : "https";
+
   let suffix = "jsonRPC";
   if (config?.protocol === "rest") {
     suffix = "";
   }
 
-  return await getEndpoints(network, "toncenter-api-v2", suffix, single);
+  return await getEndpoints(scheme, network, "toncenter-api-v2", suffix, single);
 }
 // toncenter single
 export async function getHttpEndpoint(config?: Config): Promise<string> {
@@ -144,21 +152,26 @@ export async function getHttpV4Endpoints(
   single?: boolean
 ): Promise<string[]> {
   // default params
-  const network = config?.network ? config.network : "mainnet";
+  const network = config?.network ? config.network : 'mainnet';
+  const scheme = config?.scheme ? config.scheme : 'https';
 
-  if (config?.protocol === "json-rpc") {
+  if (config?.protocol === 'json-rpc') {
     throw Error(
-      "config.protocol json-rpc is not supported for getTonApiV4Endpoints"
+      'config.protocol json-rpc is not supported for getTonApiV4Endpoints'
     );
   }
   // any other case suffix should be empty
   const suffix = ""; // this is like rest - default
 
   // other networks than mainnet are not supported
-  return await getEndpoints(network, "ton-api-v4", suffix, single);
+  return await getEndpoints(scheme, network, 'ton-api-v4', suffix, single);
 }
 // API V4 - single
 export async function getHttpV4Endpoint(config?: Config): Promise<string> {
+  const endpoints = await getHttpV4Endpoints(config, true);
+  return endpoints[0];
+}
+export async function getWsV4Endpoint(config?: Config): Promise<string> {
   const endpoints = await getHttpV4Endpoints(config, true);
   return endpoints[0];
 }

@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { getHttpV4Endpoint, getHttpV4Endpoints, Config } from '../src/index';
-import { sanity } from './helpers'
+import { sanity, delay } from './helpers'
+import WebSocket from 'ws';
 
 describe('ton-V4', function () {
     this.timeout(10000);
@@ -38,4 +39,34 @@ describe('ton-V4', function () {
         expect(json).to.not.be.undefined;
         expect(json.last.seqno).to.be.above(24920000);
     });
+    // websocket watch API
+    // since dev is down this test wont pass and not deployed to production
+    // it('ws watch is working', async () => {
+    //     const host = "ws://ton-access-dev:20001"
+
+    //     //const url = host + '/block/watch';
+    //     const url = host + '/block/watch/changed';
+
+    //     //const url = host;
+    //     let res = false;
+    //     let err = false;
+
+    //     const ws = new WebSocket(url);
+    //     ws.on('error', (e) => {
+    //         err = true;
+    //         console.error(e);
+    //     });
+
+    //     ws.on('message', function message(data: JSON) {
+    //         //console.log('received: %s', data);
+    //         console.log('watch websock message received');
+    //         res = true;
+    //     });
+
+    //     await delay(1000);
+    //     ws.close();
+
+    //     expect(res).eq(true);
+    //     expect(err).eq(false);
+    // });
 });

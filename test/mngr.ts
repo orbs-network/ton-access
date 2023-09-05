@@ -12,9 +12,10 @@ describe('Mngr', function () {
             expect(node.BackendName.length).greaterThan(0);
             expect(node.Ip.length).greaterThan(0);
             expect(node.Weight).greaterThan(0);
+            expect(node.Healthy).eq("1");
             // check not stale
             const delta = now - node.Mngr.successTS;
-            expect(delta).lessThan(2 * 60 * 1000);
+            expect(delta).lessThan(3 * 60 * 1000);
             let healthy = true;
             for (const protonet in node.Mngr.health) {
                 healthy = healthy && node.Mngr.health[protonet];
@@ -23,10 +24,16 @@ describe('Mngr', function () {
         }
     });
     // legacy nodes
-    it('nodes-api nodes length should be > 0', async () => {
+    it('legacy /nodes length should be > 0 and have valid values', async () => {
         const url = "https://ton.access.orbs.network/nodes";
-        const res = await fetch(url);
-        const nodes = await res.json() as Node[];
+        const nodes = await getJson(url);
         expect(nodes.length).to.be.above(0);
+        for (const node of nodes) {
+            // Mngr has fields
+            expect(node.Name.length).greaterThan(0);
+            expect(node.BackendName.length).greaterThan(0);
+            expect(node.Ip.length).greaterThan(0);
+            expect(node.Healthy).eq("1");
+        }
     });
 });

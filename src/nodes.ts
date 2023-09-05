@@ -6,8 +6,6 @@ export type ProtoNet =
   | "v4-mainnet"
   | "v4-testnet";
 
-const STALE_PERIOD = 10 * 60 * 1000; // 10 Min
-
 interface Mngr {
   updated: string;
   health: { [key in ProtoNet]: boolean };
@@ -63,26 +61,20 @@ export class Nodes {
       }
     }
     if (this.topology.length === 0)
-      throw new Error(`no healthy nodes retrieved`);
+      throw new Error(`no healthy nodes in ${nodesUrl}`);
   }
   getHealthyFor(protonet: ProtoNet): Node[] {
     const res: Node[] = [];
-    let staleCount = 0;
+
     for (const node of this.topology) {
-      // not stale (10 min)
-      const stale = this.initTime - node.Mngr.successTS > STALE_PERIOD;
-      if (!stale && node.Weight > 0 && node.Mngr?.health[protonet]) {
+      // healthy and has weight
+      if (node.Weight > 0 && node.Mngr?.health[protonet]) {
         res.push(node);
-      } else if (stale) {
-        staleCount++;
       }
-    }
-    // all stale throw exception
-    if (staleCount === this.topology.length) {
-      throw new Error(`all nodes manager's data are stale`);
     }
     return res;
   }
+
   ///////////////////////////////////
   // getNextNode(committeeOnly: boolean = true) {
   //   while (true) {

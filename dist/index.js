@@ -550,7 +550,6 @@
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Nodes = void 0;
       require_fetch_npm_browserify();
-      var STALE_PERIOD = 10 * 60 * 1e3;
       var Nodes = class {
         constructor() {
           this.nodeIndex = -1;
@@ -578,23 +577,16 @@
               }
             }
             if (this.topology.length === 0)
-              throw new Error(`no healthy nodes retrieved`);
+              throw new Error(`no healthy nodes in ${nodesUrl}`);
           });
         }
         getHealthyFor(protonet) {
           var _a;
           const res = [];
-          let staleCount = 0;
           for (const node of this.topology) {
-            const stale = this.initTime - node.Mngr.successTS > STALE_PERIOD;
-            if (!stale && node.Weight > 0 && ((_a = node.Mngr) === null || _a === void 0 ? void 0 : _a.health[protonet])) {
+            if (node.Weight > 0 && ((_a = node.Mngr) === null || _a === void 0 ? void 0 : _a.health[protonet])) {
               res.push(node);
-            } else if (stale) {
-              staleCount++;
             }
-          }
-          if (staleCount === this.topology.length) {
-            throw new Error(`all nodes manager's data are stale`);
           }
           return res;
         }
@@ -608,7 +600,7 @@
     "package.json"(exports, module) {
       module.exports = {
         name: "@orbs-network/ton-access",
-        version: "2.3.0",
+        version: "2.3.3",
         description: "Unthrottled anonymous RPC access to TON blockchain via a robust decentralized network",
         source: "lib/index.js",
         main: "lib/index.js",
@@ -651,6 +643,7 @@
           "@types/chai": "^4.3.4",
           "@types/isomorphic-fetch": "^0.0.36",
           "@types/mocha": "^10.0.0",
+          "@types/ws": "^8.5.4",
           buffer: "^6.0.3",
           chai: "^4.3.7",
           esbuild: "^0.15.14",
@@ -663,7 +656,8 @@
           "ts-node": "^10.9.1",
           tslib: "^2.4.0",
           tslint: "^6.1.3",
-          "tslint-config-prettier": "^1.18.0"
+          "tslint-config-prettier": "^1.18.0",
+          ws: "^8.13.0"
         }
       };
     }
@@ -701,18 +695,18 @@
         });
       };
       Object.defineProperty(exports, "__esModule", { value: true });
-      exports.getHttpV4Endpoint = exports.getHttpV4Endpoints = exports.getHttpEndpoint = exports.getHttpEndpoints = exports.Access = void 0;
+      exports.getWsV4Endpoint = exports.getHttpV4Endpoint = exports.getHttpV4Endpoints = exports.getHttpEndpoint = exports.getHttpEndpoints = exports.Access = void 0;
       var nodes_1 = require_nodes();
       var Access = class {
         constructor() {
           this.host = "ton.access.orbs.network";
           this.urlVersion = 1;
           this.nodes = new nodes_1.Nodes();
+          this.package = require_package();
         }
         init() {
           return __awaiter(this, void 0, void 0, function* () {
-            const pjson = require_package();
-            yield this.nodes.init(`https://${this.host}/mngr/nodes?npm_version=${pjson.version}`);
+            yield this.nodes.init(`https://${this.host}/mngr/nodes?npm_version=${this.package.version}`);
           });
         }
         makeProtonet(edgeProtocol, network) {
@@ -741,7 +735,7 @@
             cur += node.Weight;
           }
         }
-        buildUrls(network, edgeProtocol, suffix, single) {
+        buildUrls(scheme, network, edgeProtocol, suffix, single) {
           if (!suffix)
             suffix = "";
           if (!edgeProtocol)
@@ -753,7 +747,7 @@
           const res = [];
           const protonet = this.makeProtonet(edgeProtocol, network);
           let healthyNodes = this.nodes.getHealthyFor(protonet);
-          if (!healthyNodes.length)
+          if (!(healthyNodes === null || healthyNodes === void 0 ? void 0 : healthyNodes.length))
             throw new Error(`no healthy nodes for ${protonet}`);
           if (single && healthyNodes.length) {
             const chosen = this.weightedRandom(healthyNodes);
@@ -763,7 +757,7 @@
               throw new Error("weightedRandom return empty");
           }
           for (const node of healthyNodes) {
-            let url = `https://${this.host}/${node.NodeId}/${this.urlVersion}/${network}/${edgeProtocol}`;
+            let url = `${scheme}://${this.host}/${node.NodeId}/${this.urlVersion}/${network}/${edgeProtocol}`;
             if (suffix.length)
               url += `/${suffix}`;
             res.push(url);
@@ -772,22 +766,23 @@
         }
       };
       exports.Access = Access;
-      function getEndpoints(network, edgeProtocol, suffix, single) {
+      function getEndpoints(scheme, network, edgeProtocol, suffix, single) {
         return __awaiter(this, void 0, void 0, function* () {
           const access = new Access();
           yield access.init();
-          const res = access.buildUrls(network, edgeProtocol, suffix, single);
+          const res = access.buildUrls(scheme, network, edgeProtocol, suffix, single);
           return res;
         });
       }
       function getHttpEndpoints(config, single) {
         return __awaiter(this, void 0, void 0, function* () {
           const network = (config === null || config === void 0 ? void 0 : config.network) ? config.network : "mainnet";
+          const scheme = (config === null || config === void 0 ? void 0 : config.scheme) ? config.scheme : "https";
           let suffix = "jsonRPC";
           if ((config === null || config === void 0 ? void 0 : config.protocol) === "rest") {
             suffix = "";
           }
-          return yield getEndpoints(network, "toncenter-api-v2", suffix, single);
+          return yield getEndpoints(scheme, network, "toncenter-api-v2", suffix, single);
         });
       }
       exports.getHttpEndpoints = getHttpEndpoints;
@@ -801,11 +796,12 @@
       function getHttpV4Endpoints(config, single) {
         return __awaiter(this, void 0, void 0, function* () {
           const network = (config === null || config === void 0 ? void 0 : config.network) ? config.network : "mainnet";
+          const scheme = (config === null || config === void 0 ? void 0 : config.scheme) ? config.scheme : "https";
           if ((config === null || config === void 0 ? void 0 : config.protocol) === "json-rpc") {
             throw Error("config.protocol json-rpc is not supported for getTonApiV4Endpoints");
           }
           const suffix = "";
-          return yield getEndpoints(network, "ton-api-v4", suffix, single);
+          return yield getEndpoints(scheme, network, "ton-api-v4", suffix, single);
         });
       }
       exports.getHttpV4Endpoints = getHttpV4Endpoints;
@@ -816,6 +812,13 @@
         });
       }
       exports.getHttpV4Endpoint = getHttpV4Endpoint;
+      function getWsV4Endpoint(config) {
+        return __awaiter(this, void 0, void 0, function* () {
+          const endpoints = yield getHttpV4Endpoints(config, true);
+          return endpoints[0];
+        });
+      }
+      exports.getWsV4Endpoint = getWsV4Endpoint;
     }
   });
 
@@ -829,7 +832,8 @@
           return new index_1.Access();
         },
         getHttpEndpoint: index_1.getHttpEndpoint,
-        getHttpV4Endpoint: index_1.getHttpV4Endpoint
+        getHttpV4Endpoint: index_1.getHttpV4Endpoint,
+        getWsV4Endpoint: index_1.getWsV4Endpoint
       };
     }
   });
