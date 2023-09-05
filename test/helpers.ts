@@ -1,4 +1,6 @@
-
+export function delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 export async function getJson(url: string) {
     const settings = { method: "Get" };
     const res = await fetch(url, settings);

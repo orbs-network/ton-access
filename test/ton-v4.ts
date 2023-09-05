@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { getHttpV4Endpoint, getHttpV4Endpoints, Config } from '../src/index';
-import { sanity } from './helpers'
+import { sanity, delay } from './helpers'
+import WebSocket from 'ws';
 
 describe('ton-V4', function () {
     this.timeout(10000);
@@ -39,35 +40,32 @@ describe('ton-V4', function () {
         expect(json.last.seqno).to.be.above(24920000);
     });
     // websocket watch API
-    // it('ws watch is working', async () => {
-    //     //const host = "ws://ton-access-dev:20001";
-    //     //const host = "ws://ton-access-dev/1/mainnet/ton-api-v4";
-    //     const host = "ws://am-access-01/1/mainnet/ton-api-v4"
-    //     //const host = "wss://ton.access.orbs.network/44A1c0ff5Bd3F8B62C092Ab4D238bEE463E644A1/1/mainnet/ton-api-v4"
+    it('ws watch is working', async () => {
+        const host = "ws://ton-access-dev:20001"
 
-    //     //const url = host + '/block/watch';
-    //     const url = host + '/block/watch/changed';
+        //const url = host + '/block/watch';
+        const url = host + '/block/watch/changed';
 
-    //     //const url = host;
-    //     let res = false;
-    //     let err = false;
+        //const url = host;
+        let res = false;
+        let err = false;
 
-    //     const ws = new WebSocket(url);
-    //     ws.on('error', (e) => {
-    //         err = true;
-    //         console.error(e);
-    //     });
+        const ws = new WebSocket(url);
+        ws.on('error', (e) => {
+            err = true;
+            console.error(e);
+        });
 
-    //     ws.on('message', function message(data: JSON) {
-    //         //console.log('received: %s', data);
-    //         console.log('watch websock message received');
-    //         res = true;
-    //     });
+        ws.on('message', function message(data: JSON) {
+            //console.log('received: %s', data);
+            console.log('watch websock message received');
+            res = true;
+        });
 
-    //     await delay(1000);
-    //     ws.close();
+        await delay(1000);
+        ws.close();
 
-    //     expect(res).eq(true);
-    //     expect(err).eq(false);
-    // });
+        expect(res).eq(true);
+        expect(err).eq(false);
+    });
 });

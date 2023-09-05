@@ -1,0 +1,28 @@
+<script src="../dist/index.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        TonAccess.getWsV4Endpoint().then((endpoint) => { // get the
+            let url = 'ws://ton-access-dev:20001';
+            url += '/block/watch/changed';
+
+            const ws = new WebSocket(url);
+            ws.addEventListener("open", (event) => {
+                console.log('ws open');
+
+            });
+
+            //ws.onmessage(function message(data) {
+            let res = false;
+            ws.onmessage = (event) => {
+                console.log(event.data);
+                res = true;
+            };
+
+            setTimeout(() => {
+                console.log('success: %s', res);
+                ws.close();
+            }, 2000);
+        });
+    });
+
+</script>
