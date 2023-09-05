@@ -16,6 +16,7 @@ export class Access {
   nodes: Nodes;
   host: string;
   urlVersion: number;
+  package: any;
 
   //////////////////////////////////
   constructor() {
@@ -25,12 +26,13 @@ export class Access {
     this.urlVersion = 1;
 
     this.nodes = new Nodes();
+    this.package = require("../package.json");
   }
   //////////////////////////////////
   async init() {
-    const pjson = require("../package.json");
+
     await this.nodes.init(
-      `https://${this.host}/mngr/nodes?npm_version=${pjson.version}`
+      `https://${this.host}/mngr/nodes?npm_version=${this.package.version}`
     ); // pass host when backend endpoint is ready
   }
   //////////////////////////////////
