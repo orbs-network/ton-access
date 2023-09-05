@@ -13,6 +13,7 @@ export declare class Access {
     nodes: Nodes;
     host: string;
     urlVersion: number;
+    package: any;
     constructor();
     init(): Promise<void>;
     makeProtonet(edgeProtocol: EdgeProtocol, network: Network): ProtoNet;

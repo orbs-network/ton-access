@@ -702,11 +702,11 @@
           this.host = "ton.access.orbs.network";
           this.urlVersion = 1;
           this.nodes = new nodes_1.Nodes();
+          this.package = require_package();
         }
         init() {
           return __awaiter(this, void 0, void 0, function* () {
-            const pjson = require_package();
-            yield this.nodes.init(`https://${this.host}/mngr/nodes?npm_version=${pjson.version}`);
+            yield this.nodes.init(`https://${this.host}/mngr/nodes?npm_version=${this.package.version}`);
           });
         }
         makeProtonet(edgeProtocol, network) {
